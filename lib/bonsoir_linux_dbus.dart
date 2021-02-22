@@ -1,8 +1,8 @@
 library bonsoir_linux_dbus;
 
 import 'package:bonsoir/bonsoir.dart';
-import 'package:bonsoir_linux_dbus/src/linux_dbus_bonsoir_events.dart';
-
+import 'package:bonsoir_linux_dbus/src/linux_dbus_bonsoir_discovery.dart';
+import 'package:bonsoir_linux_dbus/src/linux_dbus_bonsoir_broadcast.dart';
 import 'package:bonsoir_platform_interface/bonsoir_platform_interface.dart';
 
 import 'package:flutter/foundation.dart';

@@ -11,12 +11,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  dbus: ^0.1.1
+  dbus: ^0.1.2
   bonsoir_platform_interface:
     path: ../bonsoir/bonsoir_platform_interface
   bonsoir:
     path: ../bonsoir/bonsoir
-  equatable: ^1.2.6
 
 
 
