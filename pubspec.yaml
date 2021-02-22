@@ -13,9 +13,11 @@ dependencies:
     sdk: flutter
   dbus: ^0.1.1
   bonsoir_platform_interface:
-    path: ../Bonsoir/bonsoir_platform_interface
+    path: ../bonsoir/bonsoir_platform_interface
   bonsoir:
-    path: ../Bonsoir/bonsoir
+    path: ../bonsoir/bonsoir
+  equatable: ^1.2.6
+
 
 
 dev_dependencies:
