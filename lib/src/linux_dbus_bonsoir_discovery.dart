@@ -15,9 +15,9 @@ class LinuxDBusBonsoirDiscovery
   AvahiServiceBrowser _browser;
   Map<String, StreamSubscription> _subscriptions = {};
   Map<String, ResolvedBonsoirService> _resolvedServices = {};
-
+  StreamSubscription _customListener;
   LinuxDBusBonsoirDiscovery(this.type, this._printLogs);
-
+  List<AvahiServiceBrowserItemNew> _pendingServices = [];
   @override
   Stream<BonsoirDiscoveryEvent> get eventStream => _controller?.stream;
 
@@ -29,6 +29,26 @@ class LinuxDBusBonsoirDiscovery
 
   @override
   Future<void> get ready async {
+    var version = (await server.callGetVersionString()).split(" ").last;
+    var mayor = int.parse(version.split(".").first);
+    var minor = int.parse(version.split(".").last);
+    if (mayor <= 0 && minor <= 7) {
+      print("Enabling workaround for V1 API without the 100ms wait behavior. Update your Avahi version to 0.8 or later if you want this warning to disappear.");
+      _customListener = busClient
+          .subscribeSignals(
+              sender: 'org.freedesktop.Avahi',
+              interface: 'org.freedesktop.Avahi.ServiceBrowser',
+              member: 'ItemNew')
+          .listen((signal) {
+        var event = AvahiServiceBrowserItemNew(signal);
+        if (event.type == this.type) {
+          print("Cached service received: ${event.friendlyString}");
+          _pendingServices.add(event);
+        }
+      });
+      /// Waiting for the DBus selector
+      await Future.delayed(Duration(milliseconds: 100));
+    }
     var serviceBrowserPath = await server.callServiceBrowserNew(
         AvahiIfIndexUnspecified, AvahiProtocolUnspecified, type, "", 0);
     _browser = AvahiServiceBrowser(busClient, 'org.freedesktop.Avahi',
@@ -40,11 +60,9 @@ class LinuxDBusBonsoirDiscovery
     _controller = StreamController.broadcast();
     _controller.add(BonsoirDiscoveryEvent(
         type: BonsoirDiscoveryEventType.DISCOVERY_STARTED));
-    await _browser.callStart();
     _subscriptions['ItemNew'] =
         _browser.subscribeItemNew().listen((event) async {
       print("Item added! ${event.friendlyString}");
-      await resolveService(event);
       _controller.add(
         BonsoirDiscoveryEvent(
           type: BonsoirDiscoveryEventType.DISCOVERY_SERVICE_FOUND,
@@ -52,6 +70,7 @@ class LinuxDBusBonsoirDiscovery
               BonsoirService(name: event.name, type: event.type, port: null),
         ),
       );
+      resolveService(event);
     });
     _subscriptions['ItemRm'] = _browser.subscribeItemRemove().listen((event) {
       print("Item removed! ${event.friendlyString}");
@@ -65,10 +84,25 @@ class LinuxDBusBonsoirDiscovery
           service: toRemove,
         ),
       );
-
-      _subscriptions['$key-resolve']?.cancel();
-      _subscriptions.remove('$key-resolve');
     });
+    await _browser.callStart();
+    _controller.addStream(
+      Stream.fromIterable(
+        _pendingServices.map(
+          (event) {
+            resolveService(event);
+            return BonsoirDiscoveryEvent(
+              type: BonsoirDiscoveryEventType.DISCOVERY_SERVICE_FOUND,
+              service: BonsoirService(
+                name: event.name,
+                type: event.type,
+                port: null,
+              ),
+            );
+          },
+        ),
+      ),
+    ).then((_) => _pendingServices = []);
   }
 
   Future<void> resolveService(AvahiServiceBrowserItemNew newService) async {
@@ -106,6 +140,7 @@ class LinuxDBusBonsoirDiscovery
     for (var entries in _subscriptions.entries) {
       await entries.value.cancel();
     }
+    _customListener?.cancel();
     _controller.add(BonsoirDiscoveryEvent(
         type: BonsoirDiscoveryEventType.DISCOVERY_STOPPED));
     _isStopped = true;
