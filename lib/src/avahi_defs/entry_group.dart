@@ -56,7 +56,7 @@ class AvahiEntryGroup extends DBusRemoteObject {
 
   /// Invokes org.freedesktop.Avahi.EntryGroup.AddService()
   Future callAddService(
-      int interface,
+      {int interface,
       int protocol,
       int flags,
       String name,
@@ -64,7 +64,7 @@ class AvahiEntryGroup extends DBusRemoteObject {
       String domain,
       String host,
       int port,
-      List<List<int>> txt) async {
+      List<List<int>> txt}) async {
     await callMethod('org.freedesktop.Avahi.EntryGroup', 'AddService', [
       DBusInt32(interface),
       DBusInt32(protocol),

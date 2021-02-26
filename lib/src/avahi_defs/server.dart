@@ -174,8 +174,8 @@ class AvahiServer extends DBusRemoteObject {
   }
 
   /// Invokes org.freedesktop.Avahi.Server.ResolveService()
-  Future<List<DBusValue>> callResolveService(int interface, int protocol,
-      String name, String type, String domain, int aprotocol, int flags) async {
+  Future<List<DBusValue>> callResolveService({int interface, int protocol,
+      String name, String type, String domain, int answerProtocol, int flags}) async {
     var result =
         await callMethod('org.freedesktop.Avahi.Server', 'ResolveService', [
       DBusInt32(interface),
@@ -183,7 +183,7 @@ class AvahiServer extends DBusRemoteObject {
       DBusString(name),
       DBusString(type),
       DBusString(domain),
-      DBusInt32(aprotocol),
+      DBusInt32(answerProtocol),
       DBusUint32(flags)
     ]);
     return result.returnValues;
@@ -238,8 +238,8 @@ class AvahiServer extends DBusRemoteObject {
   }
 
   /// Invokes org.freedesktop.Avahi.Server.ServiceResolverNew()
-  Future<String> callServiceResolverNew(int interface, int protocol,
-      String name, String type, String domain, int aprotocol, int flags) async {
+  Future<String> callServiceResolverNew({int interface, int protocol,
+      String name, String type, String domain, int answerProtocol, int flags}) async {
     var result =
         await callMethod('org.freedesktop.Avahi.Server', 'ServiceResolverNew', [
       DBusInt32(interface),
@@ -247,7 +247,7 @@ class AvahiServer extends DBusRemoteObject {
       DBusString(name),
       DBusString(type),
       DBusString(domain),
-      DBusInt32(aprotocol),
+      DBusInt32(answerProtocol),
       DBusUint32(flags)
     ]);
     return (result.returnValues[0] as DBusObjectPath).value;

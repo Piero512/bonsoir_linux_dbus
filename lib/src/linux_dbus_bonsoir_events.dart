@@ -4,6 +4,7 @@ import 'package:bonsoir_linux_dbus/src/avahi_defs/service_browser.dart';
 import 'package:bonsoir_platform_interface/bonsoir_platform_interface.dart';
 import 'avahi_defs/constants.dart';
 import 'package:dbus/dbus.dart';
+import 'dart:convert' as conv;
 
 extension LinuxAvahi on BonsoirService {
   BonsoirService copyWith(
@@ -43,5 +44,13 @@ abstract class LinuxDBusBonsoirEvents<T> extends BonsoirPlatformEvents<T> {
   LinuxDBusBonsoirEvents() {
     server = AvahiServer(busClient, 'org.freedesktop.Avahi',
         path: DBusObjectPath('/'));
+  }
+
+  static List<List<int>> convertAttributesToTxtRecord(Map<String,String> attributes){
+    return attributes.entries.map(
+    (e) => "${e.key}=${e.value}",
+    ).map(
+    (str) => conv.utf8.encode(str),
+    ).toList();
   }
 }

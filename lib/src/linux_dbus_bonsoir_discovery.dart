@@ -110,13 +110,13 @@ class LinuxDBusBonsoirDiscovery
         '${newService.protocol}.${newService.interfaceValue}.${newService.name}.${newService.type}';
     print("DBG: ${newService.friendlyString}");
     var reply = AvahiServerResolvedService(await server.callResolveService(
-        newService.interfaceValue,
-        newService.protocol,
-        newService.name,
-        newService.type,
-        newService.domain,
-        AvahiProtocolUnspecified,
-        0));
+        interface: newService.interfaceValue,
+        protocol: newService.protocol,
+        name: newService.name,
+        type: newService.type,
+        domain: newService.domain,
+        answerProtocol: AvahiProtocolUnspecified,
+        flags: 0));
     print("Service Resolved!");
     var resolvedBonsoirService = ResolvedBonsoirService(
       name: reply.name,

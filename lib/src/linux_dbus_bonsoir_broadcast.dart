@@ -4,7 +4,6 @@ import 'dart:async';
 import 'avahi_defs/entry_group.dart';
 import 'package:dbus/dbus.dart';
 import 'avahi_defs/constants.dart';
-import 'dart:convert' as conv;
 
 class LinuxDBusBonsoirBroadcast
     extends LinuxDBusBonsoirEvents<BonsoirBroadcastEvent> {
@@ -78,23 +77,16 @@ class LinuxDBusBonsoirBroadcast
 
   Future<void> sendServiceToAvahi(BonsoirService svc) {
     return _entryGroup.callAddService(
-        AvahiIfIndexUnspecified,
-        AvahiProtocolUnspecified,
-        0,
-        svc.name,
-        svc.type,
-        '',
-        '',
-        svc.port,
-        service.attributes != null
-            ? service.attributes.entries
-                .map(
-                  (e) => "${e.key}=${e.value}",
-                )
-                .map(
-                  (str) => conv.utf8.encode(str),
-                )
-                .toList()
+        interface: AvahiIfIndexUnspecified,
+        protocol: AvahiProtocolUnspecified,
+        flags: 0,
+        name: svc.name,
+        type: svc.type,
+        domain: '',
+        host: '',
+        port: svc.port,
+        txt: service.attributes != null
+            ? LinuxDBusBonsoirEvents.convertAttributesToTxtRecord(service.attributes)
             : []);
   }
 
