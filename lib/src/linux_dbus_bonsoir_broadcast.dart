@@ -1,9 +1,10 @@
 import 'linux_dbus_bonsoir_events.dart';
-import 'package:bonsoir/bonsoir.dart';
 import 'dart:async';
 import 'avahi_defs/entry_group.dart';
 import 'package:dbus/dbus.dart';
 import 'avahi_defs/constants.dart';
+import 'package:bonsoir_platform_interface/events/broadcast_event.dart';
+import 'package:bonsoir_platform_interface/service/service.dart';
 
 class LinuxDBusBonsoirBroadcast
     extends LinuxDBusBonsoirEvents<BonsoirBroadcastEvent> {
@@ -86,7 +87,8 @@ class LinuxDBusBonsoirBroadcast
         host: '',
         port: svc.port,
         txt: service.attributes != null
-            ? LinuxDBusBonsoirEvents.convertAttributesToTxtRecord(service.attributes)
+            ? LinuxDBusBonsoirEvents.convertAttributesToTxtRecord(
+                service.attributes)
             : []);
   }
 

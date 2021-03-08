@@ -1,10 +1,12 @@
 import 'avahi_defs/server.dart';
 import 'linux_dbus_bonsoir_events.dart';
-import 'package:bonsoir/bonsoir.dart';
 import 'dart:async';
 import 'avahi_defs/service_browser.dart';
 import 'package:dbus/dbus.dart';
 import 'avahi_defs/constants.dart';
+import 'package:bonsoir_platform_interface/events/discovery_event.dart';
+import 'package:bonsoir_platform_interface/service/service.dart';
+import 'package:bonsoir_platform_interface/service/resolved_service.dart';
 
 class LinuxDBusBonsoirDiscovery
     extends LinuxDBusBonsoirEvents<BonsoirDiscoveryEvent> {
@@ -33,7 +35,8 @@ class LinuxDBusBonsoirDiscovery
     var mayor = int.parse(version.split(".").first);
     var minor = int.parse(version.split(".").last);
     if (mayor <= 0 && minor <= 7) {
-      print("Enabling workaround for V1 API with the 100ms wait behavior. Update your Avahi version to 0.8 or later if you want this warning to disappear.");
+      print(
+          "Enabling workaround for V1 API with the 100ms wait behavior. Update your Avahi version to 0.8 or later if you want this warning to disappear.");
       _customListener = busClient
           .subscribeSignals(
               sender: 'org.freedesktop.Avahi',
@@ -46,6 +49,7 @@ class LinuxDBusBonsoirDiscovery
           _pendingServices.add(event);
         }
       });
+
       /// Waiting for the DBus selector
       await Future.delayed(Duration(milliseconds: 100));
     }

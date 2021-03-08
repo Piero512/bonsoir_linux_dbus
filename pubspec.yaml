@@ -1,5 +1,5 @@
 name: bonsoir_linux_dbus
-description: A new Flutter package project.
+description: Linux platform interface for bonsoir package.
 version: 0.0.1
 author: Piero512
 homepage: https://github.com/Piero512/bonsoir_linux_dbus
@@ -12,10 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   dbus: ^0.1.2
-  bonsoir_platform_interface:
-    path: ../bonsoir/bonsoir_platform_interface
-  bonsoir:
-    path: ../bonsoir/bonsoir
+  bonsoir_platform_interface: ^1.0.0
 
 
 
