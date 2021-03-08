@@ -33,7 +33,7 @@ class LinuxDBusBonsoirDiscovery
     var mayor = int.parse(version.split(".").first);
     var minor = int.parse(version.split(".").last);
     if (mayor <= 0 && minor <= 7) {
-      print("Enabling workaround for V1 API without the 100ms wait behavior. Update your Avahi version to 0.8 or later if you want this warning to disappear.");
+      print("Enabling workaround for V1 API with the 100ms wait behavior. Update your Avahi version to 0.8 or later if you want this warning to disappear.");
       _customListener = busClient
           .subscribeSignals(
               sender: 'org.freedesktop.Avahi',
@@ -138,7 +138,8 @@ class LinuxDBusBonsoirDiscovery
   @override
   Future<void> stop() async {
     for (var entries in _subscriptions.entries) {
-      await entries.value.cancel();
+      // Not awaiting because DBus has a bug where the cancelation never ends?
+      entries.value.cancel();
     }
     _customListener?.cancel();
     _controller.add(BonsoirDiscoveryEvent(
