@@ -6,7 +6,7 @@ repository: https://github.com/Piero512/bonsoir_linux_dbus
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
-  flutter: ">=1.17.0"
+  flutter: ">=1.20.0"
 
 dependencies:
   flutter:
