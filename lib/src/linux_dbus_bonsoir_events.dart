@@ -9,15 +9,15 @@ import 'dart:convert' as conv;
 
 extension LinuxAvahi on BonsoirService {
   BonsoirService copyWith(
-          {String name,
-          String type,
-          int port,
-          Map<String, dynamic> attributes}) =>
+          {String? name,
+          String? type,
+          int? port,
+          Map<String, dynamic>? attributes}) =>
       BonsoirService(
         name: name ?? this.name,
         type: type ?? this.type,
         port: port ?? this.port,
-        attributes: attributes ?? this.attributes,
+        attributes: attributes as Map<String, String>? ?? this.attributes,
       );
 }
 
@@ -40,7 +40,7 @@ extension ItemRemovePrintHelpers on AvahiServiceBrowserItemRemove {
 
 abstract class LinuxDBusBonsoirEvents<T> extends BonsoirPlatformEvents<T> {
   DBusClient busClient = DBusClient.system();
-  AvahiServer server;
+  late AvahiServer server;
 
   LinuxDBusBonsoirEvents() {
     server = AvahiServer(busClient, 'org.freedesktop.Avahi',

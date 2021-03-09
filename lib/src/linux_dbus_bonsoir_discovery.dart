@@ -11,17 +11,17 @@ import 'package:bonsoir_platform_interface/service/resolved_service.dart';
 class LinuxDBusBonsoirDiscovery
     extends LinuxDBusBonsoirEvents<BonsoirDiscoveryEvent> {
   final String type;
-  StreamController<BonsoirDiscoveryEvent> _controller;
+  StreamController<BonsoirDiscoveryEvent>? _controller;
   bool _isStopped = false;
   final bool _printLogs;
-  AvahiServiceBrowser _browser;
+  late AvahiServiceBrowser _browser;
   Map<String, StreamSubscription> _subscriptions = {};
   Map<String, ResolvedBonsoirService> _resolvedServices = {};
-  StreamSubscription _customListener;
+  StreamSubscription? _customListener;
   LinuxDBusBonsoirDiscovery(this.type, this._printLogs);
   List<AvahiServiceBrowserItemNew> _pendingServices = [];
   @override
-  Stream<BonsoirDiscoveryEvent> get eventStream => _controller?.stream;
+  Stream<BonsoirDiscoveryEvent>? get eventStream => _controller?.stream;
 
   @override
   bool get isReady => _controller != null && !_isStopped;
@@ -62,16 +62,16 @@ class LinuxDBusBonsoirDiscovery
   @override
   Future<void> start() async {
     _controller = StreamController.broadcast();
-    _controller.add(BonsoirDiscoveryEvent(
+    _controller!.add(BonsoirDiscoveryEvent(
         type: BonsoirDiscoveryEventType.DISCOVERY_STARTED));
     _subscriptions['ItemNew'] =
         _browser.subscribeItemNew().listen((event) async {
       print("Item added! ${event.friendlyString}");
-      _controller.add(
+      _controller!.add(
         BonsoirDiscoveryEvent(
           type: BonsoirDiscoveryEventType.DISCOVERY_SERVICE_FOUND,
           service:
-              BonsoirService(name: event.name, type: event.type, port: null),
+              BonsoirService(name: event.name, type: event.type, port: -1),
         ),
       );
       resolveService(event);
@@ -82,7 +82,7 @@ class LinuxDBusBonsoirDiscovery
           '${event.protocol}.${event.interfaceValue}.${event.name}.${event.type}';
       var toRemove = _resolvedServices[key];
       _resolvedServices.remove(key);
-      _controller.add(
+      _controller!.add(
         BonsoirDiscoveryEvent(
           type: BonsoirDiscoveryEventType.DISCOVERY_SERVICE_LOST,
           service: toRemove,
@@ -90,7 +90,7 @@ class LinuxDBusBonsoirDiscovery
       );
     });
     await _browser.callStart();
-    _controller.addStream(
+    _controller!.addStream(
       Stream.fromIterable(
         _pendingServices.map(
           (event) {
@@ -100,7 +100,7 @@ class LinuxDBusBonsoirDiscovery
               service: BonsoirService(
                 name: event.name,
                 type: event.type,
-                port: null,
+                port: -1,
               ),
             );
           },
@@ -131,7 +131,7 @@ class LinuxDBusBonsoirDiscovery
           .map((e) => MapEntry(e.split("=").first, e.split("=").last))),
     );
     _resolvedServices[key] = resolvedBonsoirService;
-    _controller.add(
+    _controller!.add(
       BonsoirDiscoveryEvent(
         type: BonsoirDiscoveryEventType.DISCOVERY_SERVICE_RESOLVED,
         service: resolvedBonsoirService,
@@ -146,8 +146,9 @@ class LinuxDBusBonsoirDiscovery
       entries.value.cancel();
     }
     _customListener?.cancel();
-    _controller.add(BonsoirDiscoveryEvent(
+    _controller!.add(BonsoirDiscoveryEvent(
         type: BonsoirDiscoveryEventType.DISCOVERY_STOPPED));
+    _controller?.close();
     _isStopped = true;
   }
 
