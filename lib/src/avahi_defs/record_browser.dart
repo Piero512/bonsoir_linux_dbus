@@ -4,7 +4,7 @@
 import 'package:dbus/dbus.dart';
 
 /// Signal data for org.freedesktop.Avahi.RecordBrowser.ItemNew.
-class OrgFreedesktopDBusIntrospectableItemNew extends DBusSignal {
+class AvahiRecordBrowserItemNew extends DBusSignal {
   int get interfaceValue => (values[0] as DBusInt32).value;
   int get protocol => (values[1] as DBusInt32).value;
   String get name => (values[2] as DBusString).value;
@@ -16,13 +16,13 @@ class OrgFreedesktopDBusIntrospectableItemNew extends DBusSignal {
       .toList();
   int get flags => (values[6] as DBusUint32).value;
 
-  OrgFreedesktopDBusIntrospectableItemNew(DBusSignal signal)
+  AvahiRecordBrowserItemNew(DBusSignal signal)
       : super(signal.sender, signal.path, signal.interface, signal.member,
             signal.values);
 }
 
 /// Signal data for org.freedesktop.Avahi.RecordBrowser.ItemRemove.
-class OrgFreedesktopDBusIntrospectableItemRemove extends DBusSignal {
+class AvahiRecordBrowserItemRemove extends DBusSignal {
   int get interfaceValue => (values[0] as DBusInt32).value;
   int get protocol => (values[1] as DBusInt32).value;
   String get name => (values[2] as DBusString).value;
@@ -34,37 +34,36 @@ class OrgFreedesktopDBusIntrospectableItemRemove extends DBusSignal {
       .toList();
   int get flags => (values[6] as DBusUint32).value;
 
-  OrgFreedesktopDBusIntrospectableItemRemove(DBusSignal signal)
+  AvahiRecordBrowserItemRemove(DBusSignal signal)
       : super(signal.sender, signal.path, signal.interface, signal.member,
             signal.values);
 }
 
 /// Signal data for org.freedesktop.Avahi.RecordBrowser.Failure.
-class OrgFreedesktopDBusIntrospectableFailure extends DBusSignal {
+class AvahiRecordBrowserFailure extends DBusSignal {
   String get error => (values[0] as DBusString).value;
 
-  OrgFreedesktopDBusIntrospectableFailure(DBusSignal signal)
+  AvahiRecordBrowserFailure(DBusSignal signal)
       : super(signal.sender, signal.path, signal.interface, signal.member,
             signal.values);
 }
 
 /// Signal data for org.freedesktop.Avahi.RecordBrowser.AllForNow.
-class OrgFreedesktopDBusIntrospectableAllForNow extends DBusSignal {
-  OrgFreedesktopDBusIntrospectableAllForNow(DBusSignal signal)
+class AvahiRecordBrowserAllForNow extends DBusSignal {
+  AvahiRecordBrowserAllForNow(DBusSignal signal)
       : super(signal.sender, signal.path, signal.interface, signal.member,
             signal.values);
 }
 
 /// Signal data for org.freedesktop.Avahi.RecordBrowser.CacheExhausted.
-class OrgFreedesktopDBusIntrospectableCacheExhausted extends DBusSignal {
-  OrgFreedesktopDBusIntrospectableCacheExhausted(DBusSignal signal)
+class AvahiRecordBrowserCacheExhausted extends DBusSignal {
+  AvahiRecordBrowserCacheExhausted(DBusSignal signal)
       : super(signal.sender, signal.path, signal.interface, signal.member,
             signal.values);
 }
 
-class OrgFreedesktopDBusIntrospectable extends DBusRemoteObject {
-  OrgFreedesktopDBusIntrospectable(DBusClient client, String destination,
-      {DBusObjectPath path = const DBusObjectPath.unchecked('null')})
+class AvahiRecordBrowser extends DBusRemoteObject {
+  AvahiRecordBrowser(DBusClient client, String destination, DBusObjectPath path)
       : super(client, destination, path);
 
   /// Invokes org.freedesktop.DBus.Introspectable.Introspect()
@@ -85,7 +84,7 @@ class OrgFreedesktopDBusIntrospectable extends DBusRemoteObject {
   }
 
   /// Subscribes to org.freedesktop.Avahi.RecordBrowser.ItemNew.
-  Stream<OrgFreedesktopDBusIntrospectableItemNew> subscribeItemNew() async* {
+  Stream<AvahiRecordBrowserItemNew> subscribeItemNew() async* {
     var signals =
         subscribeSignal('org.freedesktop.Avahi.RecordBrowser', 'ItemNew');
     await for (var signal in signals) {
@@ -97,14 +96,13 @@ class OrgFreedesktopDBusIntrospectable extends DBusRemoteObject {
           signal.values[4].signature == DBusSignature('q') &&
           signal.values[5].signature == DBusSignature('ay') &&
           signal.values[6].signature == DBusSignature('u')) {
-        yield OrgFreedesktopDBusIntrospectableItemNew(signal);
+        yield AvahiRecordBrowserItemNew(signal);
       }
     }
   }
 
   /// Subscribes to org.freedesktop.Avahi.RecordBrowser.ItemRemove.
-  Stream<OrgFreedesktopDBusIntrospectableItemRemove>
-      subscribeItemRemove() async* {
+  Stream<AvahiRecordBrowserItemRemove> subscribeItemRemove() async* {
     var signals =
         subscribeSignal('org.freedesktop.Avahi.RecordBrowser', 'ItemRemove');
     await for (var signal in signals) {
@@ -116,43 +114,41 @@ class OrgFreedesktopDBusIntrospectable extends DBusRemoteObject {
           signal.values[4].signature == DBusSignature('q') &&
           signal.values[5].signature == DBusSignature('ay') &&
           signal.values[6].signature == DBusSignature('u')) {
-        yield OrgFreedesktopDBusIntrospectableItemRemove(signal);
+        yield AvahiRecordBrowserItemRemove(signal);
       }
     }
   }
 
   /// Subscribes to org.freedesktop.Avahi.RecordBrowser.Failure.
-  Stream<OrgFreedesktopDBusIntrospectableFailure> subscribeFailure() async* {
+  Stream<AvahiRecordBrowserFailure> subscribeFailure() async* {
     var signals =
         subscribeSignal('org.freedesktop.Avahi.RecordBrowser', 'Failure');
     await for (var signal in signals) {
       if (signal.values.length == 1 &&
           signal.values[0].signature == DBusSignature('s')) {
-        yield OrgFreedesktopDBusIntrospectableFailure(signal);
+        yield AvahiRecordBrowserFailure(signal);
       }
     }
   }
 
   /// Subscribes to org.freedesktop.Avahi.RecordBrowser.AllForNow.
-  Stream<OrgFreedesktopDBusIntrospectableAllForNow>
-      subscribeAllForNow() async* {
-    var signals =
-        subscribeSignal('org.freedesktop.Avahi.RecordBrowser', 'AllForNow');
+  Stream<AvahiRecordBrowserAllForNow> subscribeAllForNow() async* {
+    var signals = subscribeSignal(
+        'org.freedesktop.Avahi.RecordBrowser', 'AllForNow');
     await for (var signal in signals) {
       if (signal.values.isEmpty) {
-        yield OrgFreedesktopDBusIntrospectableAllForNow(signal);
+        yield AvahiRecordBrowserAllForNow(signal);
       }
     }
   }
 
   /// Subscribes to org.freedesktop.Avahi.RecordBrowser.CacheExhausted.
-  Stream<OrgFreedesktopDBusIntrospectableCacheExhausted>
-      subscribeCacheExhausted() async* {
+  Stream<AvahiRecordBrowserCacheExhausted> subscribeCacheExhausted() async* {
     var signals = subscribeSignal(
         'org.freedesktop.Avahi.RecordBrowser', 'CacheExhausted');
     await for (var signal in signals) {
       if (signal.values.isEmpty) {
-        yield OrgFreedesktopDBusIntrospectableCacheExhausted(signal);
+        yield AvahiRecordBrowserCacheExhausted(signal);
       }
     }
   }

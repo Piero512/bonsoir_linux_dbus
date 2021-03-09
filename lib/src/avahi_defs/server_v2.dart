@@ -255,8 +255,7 @@ class AvahiServerV2 extends DBusRemoteObject {
 
   /// Subscribes to org.freedesktop.Avahi.Server2.StateChanged.
   Stream<AvahiServerV2StateChanged> subscribeStateChanged() async* {
-    var signals =
-        subscribeSignal('org.freedesktop.Avahi.Server2', 'StateChanged');
+    var signals = subscribeSignal('org.freedesktop.Avahi.Server2', 'StateChanged');
     await for (var signal in signals) {
       if (signal.values.length == 2 &&
           signal.values[0].signature == DBusSignature('i') &&

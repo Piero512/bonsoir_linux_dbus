@@ -38,8 +38,8 @@ class AvahiServiceResolverFailure extends DBusSignal {
 }
 
 class AvahiServiceResolver extends DBusRemoteObject {
-  AvahiServiceResolver(DBusClient client, String destination,
-      {DBusObjectPath path = const DBusObjectPath.unchecked('null')})
+  AvahiServiceResolver(
+      DBusClient client, String destination, DBusObjectPath path)
       : super(client, destination, path);
 
   /// Invokes org.freedesktop.DBus.Introspectable.Introspect()

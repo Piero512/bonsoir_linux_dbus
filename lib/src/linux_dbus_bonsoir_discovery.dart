@@ -55,8 +55,8 @@ class LinuxDBusBonsoirDiscovery
     }
     var serviceBrowserPath = await server.callServiceBrowserNew(
         AvahiIfIndexUnspecified, AvahiProtocolUnspecified, type, "", 0);
-    _browser = AvahiServiceBrowser(busClient, 'org.freedesktop.Avahi',
-        path: DBusObjectPath(serviceBrowserPath));
+    _browser = AvahiServiceBrowser(
+        busClient, 'org.freedesktop.Avahi', DBusObjectPath(serviceBrowserPath));
   }
 
   @override

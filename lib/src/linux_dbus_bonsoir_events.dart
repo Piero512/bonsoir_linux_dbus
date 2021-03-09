@@ -44,7 +44,7 @@ abstract class LinuxDBusBonsoirEvents<T> extends BonsoirPlatformEvents<T> {
 
   LinuxDBusBonsoirEvents() {
     server = AvahiServer(busClient, 'org.freedesktop.Avahi',
-        path: DBusObjectPath('/'));
+        DBusObjectPath('/'));
   }
 
   static List<List<int>> convertAttributesToTxtRecord(

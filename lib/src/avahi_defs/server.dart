@@ -1,5 +1,5 @@
 // This file was generated using the following command and may be overwritten.
-// dart-dbus generate-remote-object /Users/piero512/avahi/avahi-daemon/org.freedesktop.Avahi.Server.xml
+// dart-dbus generate-remote-object org.freedesktop.Avahi.Server.xml
 
 import 'package:bonsoir_linux_dbus/src/avahi_defs/constants.dart';
 import 'package:dbus/dbus.dart';
@@ -45,8 +45,7 @@ class AvahiServerStateChanged extends DBusSignal {
 }
 
 class AvahiServer extends DBusRemoteObject {
-  AvahiServer(DBusClient client, String destination,
-      {DBusObjectPath path = const DBusObjectPath.unchecked('null')})
+  AvahiServer(DBusClient client, String destination, DBusObjectPath path)
       : super(client, destination, path);
 
   /// Invokes org.freedesktop.DBus.Introspectable.Introspect()
