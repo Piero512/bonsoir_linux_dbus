@@ -10,6 +10,6 @@
 
 * Rename static method registerPlugin to registerWith so it works with the flutter generated registrant 
 
-## [0.1.0] - March 9th, 2021
+## [0.1.0] - March 24th, 2021
 
-* Migrate to null-safety.
+* Migrate to null-safety and update to the newer platform interface.
