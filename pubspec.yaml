@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   dbus: ^0.2.1
-  bonsoir_platform_interface: ^1.0.0+2
+  bonsoir_platform_interface: ^1.1.0
 
 
 

@@ -1,8 +1,6 @@
 import 'package:bonsoir_linux_dbus/src/avahi_defs/server.dart';
 import 'package:bonsoir_linux_dbus/src/avahi_defs/service_browser.dart';
 import 'package:bonsoir_platform_interface/bonsoir_platform_interface.dart';
-import 'package:bonsoir_platform_interface/service/service.dart';
-import 'package:bonsoir_platform_interface/events/broadcast_event.dart';
 import 'avahi_defs/constants.dart';
 import 'package:dbus/dbus.dart';
 import 'dart:convert' as conv;
@@ -38,7 +36,7 @@ extension ItemRemovePrintHelpers on AvahiServiceBrowserItemRemove {
   }
 }
 
-abstract class LinuxDBusBonsoirEvents<T> extends BonsoirPlatformEvents<T> {
+abstract class LinuxDBusBonsoirEvents<T extends BonsoirEvent> extends BonsoirAction<T> {
   DBusClient busClient = DBusClient.system();
   late AvahiServer server;
 

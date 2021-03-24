@@ -4,9 +4,7 @@ import 'dart:async';
 import 'avahi_defs/service_browser.dart';
 import 'package:dbus/dbus.dart';
 import 'avahi_defs/constants.dart';
-import 'package:bonsoir_platform_interface/events/discovery_event.dart';
-import 'package:bonsoir_platform_interface/service/service.dart';
-import 'package:bonsoir_platform_interface/service/resolved_service.dart';
+import 'package:bonsoir_platform_interface/bonsoir_platform_interface.dart';
 
 class LinuxDBusBonsoirDiscovery
     extends LinuxDBusBonsoirEvents<BonsoirDiscoveryEvent> {
