@@ -36,13 +36,14 @@ extension ItemRemovePrintHelpers on AvahiServiceBrowserItemRemove {
   }
 }
 
-abstract class LinuxDBusBonsoirEvents<T extends BonsoirEvent> extends BonsoirAction<T> {
+abstract class LinuxDBusBonsoirEvents<T extends BonsoirEvent>
+    extends BonsoirAction<T> {
   DBusClient busClient = DBusClient.system();
   late AvahiServer server;
 
   LinuxDBusBonsoirEvents() {
-    server = AvahiServer(busClient, 'org.freedesktop.Avahi',
-        DBusObjectPath('/'));
+    server =
+        AvahiServer(busClient, 'org.freedesktop.Avahi', DBusObjectPath('/'));
   }
 
   static List<List<int>> convertAttributesToTxtRecord(

@@ -68,8 +68,7 @@ class LinuxDBusBonsoirDiscovery
       _controller!.add(
         BonsoirDiscoveryEvent(
           type: BonsoirDiscoveryEventType.DISCOVERY_SERVICE_FOUND,
-          service:
-              BonsoirService(name: event.name, type: event.type, port: -1),
+          service: BonsoirService(name: event.name, type: event.type, port: -1),
         ),
       );
       resolveService(event);

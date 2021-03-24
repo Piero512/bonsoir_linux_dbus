@@ -108,9 +108,6 @@ class LinuxDBusBonsoirBroadcast
 
   @override
   Map<String, dynamic> toJson() {
-    return {
-      'id': _entryGroup.path.toString(),
-      'printLogs': _printLogs
-    };
+    return {'id': _entryGroup.path.toString(), 'printLogs': _printLogs};
   }
 }

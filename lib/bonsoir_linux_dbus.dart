@@ -8,8 +8,7 @@ import 'package:flutter/foundation.dart';
 
 /// Class for Linux implementation through Bonjour interface.
 class BonsoirLinuxDBus extends BonsoirPlatformInterface {
-
-  static void registerWith(){
+  static void registerWith() {
     BonsoirPlatformInterface.instance = BonsoirLinuxDBus();
   }
 

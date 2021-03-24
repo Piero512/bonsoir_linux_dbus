@@ -133,8 +133,8 @@ class AvahiRecordBrowser extends DBusRemoteObject {
 
   /// Subscribes to org.freedesktop.Avahi.RecordBrowser.AllForNow.
   Stream<AvahiRecordBrowserAllForNow> subscribeAllForNow() async* {
-    var signals = subscribeSignal(
-        'org.freedesktop.Avahi.RecordBrowser', 'AllForNow');
+    var signals =
+        subscribeSignal('org.freedesktop.Avahi.RecordBrowser', 'AllForNow');
     await for (var signal in signals) {
       if (signal.values.isEmpty) {
         yield AvahiRecordBrowserAllForNow(signal);
