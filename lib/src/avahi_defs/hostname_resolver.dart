@@ -4,7 +4,7 @@
 import 'package:dbus/dbus.dart';
 
 /// Signal data for org.freedesktop.Avahi.HostNameResolver.Found.
-class OrgFreedesktopDBusIntrospectableFound extends DBusSignal {
+class AvahiHostNameResolverFound extends DBusSignal {
   int get interfaceValue => (values[0] as DBusInt32).value;
   int get protocol => (values[1] as DBusInt32).value;
   String get name => (values[2] as DBusString).value;
@@ -12,22 +12,22 @@ class OrgFreedesktopDBusIntrospectableFound extends DBusSignal {
   String get address => (values[4] as DBusString).value;
   int get flags => (values[5] as DBusUint32).value;
 
-  OrgFreedesktopDBusIntrospectableFound(DBusSignal signal)
+  AvahiHostNameResolverFound(DBusSignal signal)
       : super(signal.sender, signal.path, signal.interface, signal.member,
             signal.values);
 }
 
 /// Signal data for org.freedesktop.Avahi.HostNameResolver.Failure.
-class OrgFreedesktopDBusIntrospectableFailure extends DBusSignal {
+class AvahiHostNameResolverFailure extends DBusSignal {
   String get error => (values[0] as DBusString).value;
 
-  OrgFreedesktopDBusIntrospectableFailure(DBusSignal signal)
+  AvahiHostNameResolverFailure(DBusSignal signal)
       : super(signal.sender, signal.path, signal.interface, signal.member,
             signal.values);
 }
 
-class OrgFreedesktopDBusIntrospectable extends DBusRemoteObject {
-  OrgFreedesktopDBusIntrospectable(DBusClient client, String destination,
+class AvahiHostNameResolver extends DBusRemoteObject {
+  AvahiHostNameResolver(DBusClient client, String destination,
       {DBusObjectPath path = const DBusObjectPath.unchecked('null')})
       : super(client, destination, path);
 
@@ -49,7 +49,7 @@ class OrgFreedesktopDBusIntrospectable extends DBusRemoteObject {
   }
 
   /// Subscribes to org.freedesktop.Avahi.HostNameResolver.Found.
-  Stream<OrgFreedesktopDBusIntrospectableFound> subscribeFound() async* {
+  Stream<AvahiHostNameResolverFound> subscribeFound() async* {
     var signals =
         subscribeSignal('org.freedesktop.Avahi.HostNameResolver', 'Found');
     await for (var signal in signals) {
@@ -60,19 +60,19 @@ class OrgFreedesktopDBusIntrospectable extends DBusRemoteObject {
           signal.values[3].signature == DBusSignature('i') &&
           signal.values[4].signature == DBusSignature('s') &&
           signal.values[5].signature == DBusSignature('u')) {
-        yield OrgFreedesktopDBusIntrospectableFound(signal);
+        yield AvahiHostNameResolverFound(signal);
       }
     }
   }
 
   /// Subscribes to org.freedesktop.Avahi.HostNameResolver.Failure.
-  Stream<OrgFreedesktopDBusIntrospectableFailure> subscribeFailure() async* {
+  Stream<AvahiHostNameResolverFailure> subscribeFailure() async* {
     var signals =
         subscribeSignal('org.freedesktop.Avahi.HostNameResolver', 'Failure');
     await for (var signal in signals) {
       if (signal.values.length == 1 &&
           signal.values[0].signature == DBusSignature('s')) {
-        yield OrgFreedesktopDBusIntrospectableFailure(signal);
+        yield AvahiHostNameResolverFailure(signal);
       }
     }
   }

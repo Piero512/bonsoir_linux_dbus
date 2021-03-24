@@ -1,5 +1,5 @@
 // This file was generated using the following command and may be overwritten.
-// dart-dbus generate-remote-object /Users/piero512/avahi/avahi-daemon/org.freedesktop.Avahi.Server.xml
+// dart-dbus generate-remote-object org.freedesktop.Avahi.Server.xml
 
 import 'package:bonsoir_linux_dbus/src/avahi_defs/constants.dart';
 import 'package:dbus/dbus.dart';
@@ -13,13 +13,13 @@ class AvahiServerResolvedService extends DBusStruct {
         super(children);
 
   int get interface => (values[0] as DBusInt32).value;
-  AvahiProtocol get protocol =>
+  AvahiProtocol? get protocol =>
       (values[1] as DBusInt32).value.toAvahiProtocol();
   String get name => (values[2] as DBusString).value;
   String get type => (values[3] as DBusString).value;
   String get domain => (values[4] as DBusString).value;
   String get host => (values[5] as DBusString).value;
-  AvahiProtocol get aprotocol =>
+  AvahiProtocol? get aprotocol =>
       (values[6] as DBusInt32).value.toAvahiProtocol();
   String get address => (values[7] as DBusString).value;
   int get port => (values[8] as DBusUint16).value;
@@ -45,8 +45,7 @@ class AvahiServerStateChanged extends DBusSignal {
 }
 
 class AvahiServer extends DBusRemoteObject {
-  AvahiServer(DBusClient client, String destination,
-      {DBusObjectPath path = const DBusObjectPath.unchecked('null')})
+  AvahiServer(DBusClient client, String destination, DBusObjectPath path)
       : super(client, destination, path);
 
   /// Invokes org.freedesktop.DBus.Introspectable.Introspect()
@@ -175,13 +174,13 @@ class AvahiServer extends DBusRemoteObject {
 
   /// Invokes org.freedesktop.Avahi.Server.ResolveService()
   Future<List<DBusValue>> callResolveService(
-      {int interface,
-      int protocol,
-      String name,
-      String type,
-      String domain,
-      int answerProtocol,
-      int flags}) async {
+      {required int interface,
+      required int protocol,
+      required String name,
+      required String type,
+      required String domain,
+      required int answerProtocol,
+      required int flags}) async {
     var result =
         await callMethod('org.freedesktop.Avahi.Server', 'ResolveService', [
       DBusInt32(interface),
@@ -245,13 +244,13 @@ class AvahiServer extends DBusRemoteObject {
 
   /// Invokes org.freedesktop.Avahi.Server.ServiceResolverNew()
   Future<String> callServiceResolverNew(
-      {int interface,
-      int protocol,
-      String name,
-      String type,
-      String domain,
-      int answerProtocol,
-      int flags}) async {
+      {required int interface,
+      required int protocol,
+      required String name,
+      required String type,
+      required String domain,
+      required int answerProtocol,
+      required int flags}) async {
     var result =
         await callMethod('org.freedesktop.Avahi.Server', 'ServiceResolverNew', [
       DBusInt32(interface),

@@ -3,24 +3,23 @@ import 'dart:async';
 import 'avahi_defs/entry_group.dart';
 import 'package:dbus/dbus.dart';
 import 'avahi_defs/constants.dart';
-import 'package:bonsoir_platform_interface/events/broadcast_event.dart';
-import 'package:bonsoir_platform_interface/service/service.dart';
+import 'package:bonsoir_platform_interface/bonsoir_platform_interface.dart';
 
 class LinuxDBusBonsoirBroadcast
     extends LinuxDBusBonsoirEvents<BonsoirBroadcastEvent> {
   final BonsoirService service;
-  StreamController<BonsoirBroadcastEvent> _controller;
+  StreamController<BonsoirBroadcastEvent>? _controller;
   bool _isStopped = false;
   final bool _printLogs;
 
   LinuxDBusBonsoirBroadcast(this.service, this._printLogs);
 
-  AvahiEntryGroup _entryGroup;
+  late AvahiEntryGroup _entryGroup;
 
   Map<String, StreamSubscription> _subscriptions = {};
 
   @override
-  Stream<BonsoirBroadcastEvent> get eventStream => _controller?.stream;
+  Stream<BonsoirBroadcastEvent>? get eventStream => _controller?.stream;
 
   @override
   bool get isReady => _controller != null && !_isStopped;
@@ -49,16 +48,16 @@ class LinuxDBusBonsoirBroadcast
         case AvahiEntryGroupState.AVAHI_ENTRY_GROUP_UNCOMMITED:
         case AvahiEntryGroupState.AVAHI_ENTRY_GROUP_REGISTERING:
           // TODO: Separate the events
-          _controller.add(BonsoirStaticClasses.unknownEvent);
+          _controller!.add(BonsoirStaticClasses.unknownEvent);
           break;
         case AvahiEntryGroupState.AVAHI_ENTRY_GROUP_ESTABLISHED:
-          _controller.add(BonsoirBroadcastEvent(
+          _controller!.add(BonsoirBroadcastEvent(
               type: BonsoirBroadcastEventType.BROADCAST_STARTED,
               service: service));
           break;
         case AvahiEntryGroupState.AVAHI_ENTRY_GROUP_COLLISION:
           print("Service name collision!");
-          _controller.add(BonsoirStaticClasses.unknownEvent);
+          _controller!.add(BonsoirStaticClasses.unknownEvent);
           server.callGetAlternativeServiceName(service.name).then(
                 (newName) => _entryGroup.callReset().then(
                       (_) => sendServiceToAvahi(
@@ -69,8 +68,11 @@ class LinuxDBusBonsoirBroadcast
           break;
         case AvahiEntryGroupState.AVAHI_ENTRY_GROUP_FAILURE:
           print("Received failure: ${event.error}");
-          _controller.add(BonsoirStaticClasses.unknownEvent);
+          _controller!.add(BonsoirStaticClasses.unknownEvent);
           break;
+        default:
+          print("Received Unknown state with value ${event.state}");
+          _controller!.add(BonsoirStaticClasses.unknownEvent);
       }
     });
     await _entryGroup.callCommit();
@@ -88,7 +90,7 @@ class LinuxDBusBonsoirBroadcast
         port: svc.port,
         txt: service.attributes != null
             ? LinuxDBusBonsoirEvents.convertAttributesToTxtRecord(
-                service.attributes)
+                service.attributes!)
             : []);
   }
 
@@ -98,15 +100,16 @@ class LinuxDBusBonsoirBroadcast
       entries.value.cancel();
     }
     await _entryGroup.callFree();
-    _controller.add(BonsoirBroadcastEvent(
+    _controller!.add(BonsoirBroadcastEvent(
         type: BonsoirBroadcastEventType.BROADCAST_STOPPED));
+    _controller?.close();
     _isStopped = true;
   }
 
   @override
   Map<String, dynamic> toJson() {
     return {
-      'id': _entryGroup?.path.toString() ?? "UNKNOWN",
+      'id': _entryGroup.path.toString(),
       'printLogs': _printLogs
     };
   }

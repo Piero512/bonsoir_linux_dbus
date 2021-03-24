@@ -3,8 +3,6 @@ library bonsoir_linux_dbus;
 import 'package:bonsoir_linux_dbus/src/linux_dbus_bonsoir_discovery.dart';
 import 'package:bonsoir_linux_dbus/src/linux_dbus_bonsoir_broadcast.dart';
 import 'package:bonsoir_platform_interface/bonsoir_platform_interface.dart';
-import 'package:bonsoir_platform_interface/events/broadcast_event.dart';
-import 'package:bonsoir_platform_interface/events/discovery_event.dart';
 
 import 'package:flutter/foundation.dart';
 
@@ -16,13 +14,13 @@ class BonsoirLinuxDBus extends BonsoirPlatformInterface {
   }
 
   @override
-  BonsoirPlatformEvents<BonsoirBroadcastEvent> createBroadcast(service,
+  BonsoirAction<BonsoirBroadcastEvent> createBroadcast(service,
       {bool printLogs = kDebugMode}) {
     return LinuxDBusBonsoirBroadcast(service, printLogs);
   }
 
   @override
-  BonsoirPlatformEvents<BonsoirDiscoveryEvent> createDiscovery(String type,
+  BonsoirAction<BonsoirDiscoveryEvent> createDiscovery(String type,
       {bool printLogs = kDebugMode}) {
     return LinuxDBusBonsoirDiscovery(type, printLogs);
   }

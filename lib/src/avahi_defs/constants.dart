@@ -20,7 +20,7 @@ extension AvahiProtocolHelpers on AvahiProtocol {
   static Map<AvahiProtocol, int> avahiProtocolToInt = AvahiIntHelpers
       .intToAvahiProtocol
       .map((key, value) => MapEntry(value, key));
-  int toInt() => AvahiProtocolHelpers.avahiProtocolToInt[this];
+  int? toInt() => AvahiProtocolHelpers.avahiProtocolToInt[this];
 }
 
 extension AvahiClientStateHelpers on AvahiClientState {
@@ -33,21 +33,21 @@ extension AvahiClientStateHelpers on AvahiClientState {
   };
   static Map<int, AvahiClientState> intToAcs =
       Map.fromEntries(acsToInt.entries.map((e) => MapEntry(e.value, e.key)));
-  int toInt() => acsToInt[this];
+  int? toInt() => acsToInt[this];
 }
 
 extension AvahiEntryGroupStateHelpers on AvahiEntryGroupState {
   static Map<AvahiEntryGroupState, int> aegsToInt = AvahiEntryGroupState.values
       .asMap()
       .map((key, value) => MapEntry(value, key));
-  int toInt() => aegsToInt[this];
+  int? toInt() => aegsToInt[this];
 }
 
 extension AvahiIntHelpers on int {
-  AvahiClientState toAvahiClientState() =>
+  AvahiClientState? toAvahiClientState() =>
       AvahiClientStateHelpers.intToAcs[this];
 
-  AvahiEntryGroupState toAvahiEntryGroupState() =>
+  AvahiEntryGroupState? toAvahiEntryGroupState() =>
       AvahiEntryGroupState.values.asMap()[this];
 
   static Map<int, AvahiProtocol> intToAvahiProtocol =
@@ -55,7 +55,7 @@ extension AvahiIntHelpers on int {
         ..remove(2)
         ..[-1] = AvahiProtocol.AVAHI_PROTO_UNSPEC;
 
-  AvahiProtocol toAvahiProtocol() => AvahiIntHelpers.intToAvahiProtocol[this];
+  AvahiProtocol? toAvahiProtocol() => AvahiIntHelpers.intToAvahiProtocol[this];
 }
 
 const AvahiIfIndexUnspecified = -1;
