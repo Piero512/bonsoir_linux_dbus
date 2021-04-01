@@ -1,6 +1,6 @@
 name: bonsoir_linux_dbus
 description: Linux platform interface for bonsoir package.
-version: '0.1.0'
+version: '0.1.1'
 homepage: https://github.com/Piero512/bonsoir_linux_dbus
 repository: https://github.com/Piero512/bonsoir_linux_dbus
 
