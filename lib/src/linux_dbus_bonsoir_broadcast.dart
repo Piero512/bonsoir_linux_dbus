@@ -32,7 +32,7 @@ class LinuxDBusBonsoirBroadcast
     _entryGroup = AvahiEntryGroup(
       busClient,
       'org.freedesktop.Avahi',
-      path: DBusObjectPath(
+      DBusObjectPath(
         await server.callEntryGroupNew(),
       ),
     );

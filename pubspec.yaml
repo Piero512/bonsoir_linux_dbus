@@ -11,7 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  dbus: ^0.2.1
+  dbus: ^0.3.3
   bonsoir_platform_interface: ^1.1.0
 
 

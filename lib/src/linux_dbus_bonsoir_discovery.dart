@@ -76,7 +76,7 @@ class LinuxDBusBonsoirDiscovery
     _subscriptions['ItemRm'] = _browser.subscribeItemRemove().listen((event) {
       print("Item removed! ${event.friendlyString}");
       var key =
-          '${event.protocol}.${event.interfaceValue}.${event.name}.${event.type}';
+          '${event.protocol}.${event.interface_}.${event.name}.${event.type}';
       var toRemove = _resolvedServices[key];
       _resolvedServices.remove(key);
       _controller!.add(
@@ -108,10 +108,10 @@ class LinuxDBusBonsoirDiscovery
 
   Future<void> resolveService(AvahiServiceBrowserItemNew newService) async {
     var key =
-        '${newService.protocol}.${newService.interfaceValue}.${newService.name}.${newService.type}';
+        '${newService.protocol}.${newService.interface_}.${newService.name}.${newService.type}';
     print("DBG: ${newService.friendlyString}");
     var reply = AvahiServerResolvedService(await server.callResolveService(
-        interface: newService.interfaceValue,
+        interface: newService.interface_,
         protocol: newService.protocol,
         name: newService.name,
         type: newService.type,

@@ -13,3 +13,8 @@
 ## [0.1.0] - March 24th, 2021
 
 * Migrate to null-safety and update to the newer platform interface.
+
+## [0.1.1] - April 1st, 2021
+
+* ~~Introduced Herobrine~~
+* Bump dbus.dart version constraint to 0.3.3
