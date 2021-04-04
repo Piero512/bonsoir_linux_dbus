@@ -25,8 +25,8 @@ jobs:
 
       # Uncomment this step to verify the use of 'dart format' on each commit.
       - name: Verify formatting
-        run: flutter format --dry-run --set-exit-if-changed .
-
+        run: 'flutter format --dry-run --set-exit-if-changed .'
+        continue-on-error: true
       # Consider passing '--fatal-infos' for slightly stricter analysis.
       - name: Analyze project source
         run: flutter analyze
