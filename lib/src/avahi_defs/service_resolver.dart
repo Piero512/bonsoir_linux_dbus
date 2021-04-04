@@ -5,7 +5,7 @@ import 'package:dbus/dbus.dart';
 
 /// Signal data for org.freedesktop.Avahi.ServiceResolver.Found.
 class AvahiServiceResolverFound extends DBusSignal {
-  int get interface_ => (values[0] as DBusInt32).value;
+  int get interfaceValue => (values[0] as DBusInt32).value;
   int get protocol => (values[1] as DBusInt32).value;
   String get name => (values[2] as DBusString).value;
   String get type => (values[3] as DBusString).value;

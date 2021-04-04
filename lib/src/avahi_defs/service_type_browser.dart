@@ -5,7 +5,7 @@ import 'package:dbus/dbus.dart';
 
 /// Signal data for org.freedesktop.Avahi.ServiceTypeBrowser.ItemNew.
 class AvahiServiceTypeBrowserItemNew extends DBusSignal {
-  int get interface_ => (values[0] as DBusInt32).value;
+  int get interfaceValue => (values[0] as DBusInt32).value;
   int get protocol => (values[1] as DBusInt32).value;
   String get type => (values[2] as DBusString).value;
   String get domain => (values[3] as DBusString).value;
@@ -18,7 +18,7 @@ class AvahiServiceTypeBrowserItemNew extends DBusSignal {
 
 /// Signal data for org.freedesktop.Avahi.ServiceTypeBrowser.ItemRemove.
 class AvahiServiceTypeBrowserItemRemove extends DBusSignal {
-  int get interface_ => (values[0] as DBusInt32).value;
+  int get interfaceValue => (values[0] as DBusInt32).value;
   int get protocol => (values[1] as DBusInt32).value;
   String get type => (values[2] as DBusString).value;
   String get domain => (values[3] as DBusString).value;

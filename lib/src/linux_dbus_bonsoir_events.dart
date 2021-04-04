@@ -29,13 +29,13 @@ extension BonsoirStaticClasses on BonsoirBroadcastEvent {
 
 extension ItemNewPrintHelpers on AvahiServiceBrowserItemNew {
   String get friendlyString {
-    return "AvahiServiceBrowserItemNew(path: '$path',interface: '$interface_',protocol: '${protocol.toAvahiProtocol().toString()}', name: '$name',type: '$type',domain: '${this.domain}'";
+    return "AvahiServiceBrowserItemNew(path: '$path',interface: '$interfaceValue',protocol: '${protocol.toAvahiProtocol().toString()}', name: '$name',type: '$type',domain: '${this.domain}'";
   }
 }
 
 extension ItemRemovePrintHelpers on AvahiServiceBrowserItemRemove {
   String get friendlyString {
-    return "AvahiServiceBrowserItemRemove(path: '$path',interface: '$interface_',protocol: '${protocol.toAvahiProtocol().toString()}', name: '$name',type: '$type',domain: '${this.domain}'";
+    return "AvahiServiceBrowserItemRemove(path: '$path',interface: '$interfaceValue',protocol: '${protocol.toAvahiProtocol().toString()}', name: '$name',type: '$type',domain: '${this.domain}'";
   }
 }
 

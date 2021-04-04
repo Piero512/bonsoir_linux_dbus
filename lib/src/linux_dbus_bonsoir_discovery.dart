@@ -15,8 +15,6 @@ class LinuxDBusBonsoirDiscovery
   late AvahiServiceBrowser _browser;
   // Map of found system names to subscriptions to ServiceBrowser signals.
   Map<String, StreamSubscription> _subscriptions = {};
-  // List of services returned by the workaround used before Avahi 0.8 introduced the new DBus API.
-  List<AvahiServiceBrowserItemNew> _pendingServices = [];
   // Map of found system names to resolved addresses. Used to send removed services.
   Map<String, ResolvedBonsoirService> _resolvedServices = {};
 
@@ -93,7 +91,7 @@ class LinuxDBusBonsoirDiscovery
     _subscriptions['ItemRm'] = _browser.subscribeItemRemove().listen((event) {
       print("Item removed! ${event.friendlyString}");
       var key =
-          '${event.protocol}.${event.interface_}.${event.name}.${event.type}';
+          '${event.protocol}.${event.interfaceValue}.${event.name}.${event.type}';
       var toRemove = _resolvedServices[key];
       _resolvedServices.remove(key);
       controller!.add(
@@ -108,10 +106,10 @@ class LinuxDBusBonsoirDiscovery
 
   Future<void> resolveService(AvahiServiceBrowserItemNew newService) async {
     var key =
-        '${newService.protocol}.${newService.interface_}.${newService.name}.${newService.type}';
+        '${newService.protocol}.${newService.interfaceValue}.${newService.name}.${newService.type}';
     dbgPrint("DBG: ${newService.friendlyString}");
     var reply = AvahiServerResolvedService(await server.callResolveService(
-        interface: newService.interface_,
+        interface: newService.interfaceValue,
         protocol: newService.protocol,
         name: newService.name,
         type: newService.type,

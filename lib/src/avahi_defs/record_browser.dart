@@ -5,7 +5,7 @@ import 'package:dbus/dbus.dart';
 
 /// Signal data for org.freedesktop.Avahi.RecordBrowser.ItemNew.
 class AvahiRecordBrowserItemNew extends DBusSignal {
-  int get interface_ => (values[0] as DBusInt32).value;
+  int get interfaceValue => (values[0] as DBusInt32).value;
   int get protocol => (values[1] as DBusInt32).value;
   String get name => (values[2] as DBusString).value;
   int get clazz => (values[3] as DBusUint16).value;
@@ -23,7 +23,7 @@ class AvahiRecordBrowserItemNew extends DBusSignal {
 
 /// Signal data for org.freedesktop.Avahi.RecordBrowser.ItemRemove.
 class AvahiRecordBrowserItemRemove extends DBusSignal {
-  int get interface_ => (values[0] as DBusInt32).value;
+  int get interfaceValue => (values[0] as DBusInt32).value;
   int get protocol => (values[1] as DBusInt32).value;
   String get name => (values[2] as DBusString).value;
   int get clazz => (values[3] as DBusUint16).value;
