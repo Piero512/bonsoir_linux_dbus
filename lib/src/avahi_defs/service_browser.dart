@@ -68,7 +68,7 @@ class AvahiServiceBrowser extends DBusRemoteObject {
 
   /// Invokes org.freedesktop.Avahi.ServiceBrowser.Start()
   Future<void> callStart() async {
-    var result = await callMethod('org.freedesktop.Avahi.ServiceBrowser', 'Start', []);
+    var result = await callMethod('org.freedesktop.Avahi.ServiceBrowser', 'Start', [], flags: {DBusMethodCallFlag.noReplyExpected});
     if (result.signature != DBusSignature('')) {
       throw 'org.freedesktop.Avahi.ServiceBrowser.Start returned invalid values \${result.values}';
     }

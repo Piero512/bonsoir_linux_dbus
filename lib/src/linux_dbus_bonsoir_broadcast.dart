@@ -37,18 +37,17 @@ class LinuxDBusBonsoirBroadcast
       ),
     );
     await sendServiceToAvahi(this.service);
+    _controller = StreamController();
   }
 
   @override
   Future<void> start() async {
-    _controller = StreamController.broadcast();
+    
     _subscriptions['StateChanged'] =
         _entryGroup.subscribeStateChanged().listen((event) {
       switch (event.state.toAvahiEntryGroupState()) {
         case AvahiEntryGroupState.AVAHI_ENTRY_GROUP_UNCOMMITED:
         case AvahiEntryGroupState.AVAHI_ENTRY_GROUP_REGISTERING:
-          // TODO: Separate the events
-          _controller!.add(BonsoirStaticClasses.unknownEvent);
           break;
         case AvahiEntryGroupState.AVAHI_ENTRY_GROUP_ESTABLISHED:
           _controller!.add(BonsoirBroadcastEvent(
