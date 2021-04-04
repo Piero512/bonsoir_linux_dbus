@@ -20,6 +20,9 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           channel: beta
+      - name: Install Avahi daemon
+        run: sudo apt install -y avahi-daemon
+        
       - name: Install dependencies
         run: flutter pub get
 
