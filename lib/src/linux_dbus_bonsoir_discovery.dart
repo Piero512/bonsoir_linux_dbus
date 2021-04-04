@@ -43,7 +43,19 @@ class LinuxDBusBonsoirDiscovery
         var event = AvahiServiceBrowserItemNew(signal);
         if (event.type == this.type) {
           print("Cached service received: ${event.friendlyString}");
-          _pendingServices.add(event);
+          if(controller != null){
+            var svc = BonsoirService(
+              name: event.name,
+              type: event.type,
+              port: -1
+            );
+            controller!.add(
+              BonsoirDiscoveryEvent(type: BonsoirDiscoveryEventType.DISCOVERY_SERVICE_FOUND, service: svc)
+            );
+            resolveService(event);
+          } else {
+            throw "Controller is null, even though it shouldn't";
+          }
         }
       });
 
@@ -60,11 +72,11 @@ class LinuxDBusBonsoirDiscovery
     }
     _browser = AvahiServiceBrowser(
         busClient, 'org.freedesktop.Avahi', DBusObjectPath(serviceBrowserPath));
+    controller = StreamController();
   }
 
   @override
   Future<void> start() async {
-    controller = StreamController.broadcast();
     controller!.add(BonsoirDiscoveryEvent(
         type: BonsoirDiscoveryEventType.DISCOVERY_STARTED));
     _subscriptions['ItemNew'] =
@@ -92,23 +104,6 @@ class LinuxDBusBonsoirDiscovery
       );
     });
     await _browser.callStart();
-    controller!.addStream(
-      Stream.fromIterable(
-        _pendingServices.map(
-          (event) {
-            resolveService(event);
-            return BonsoirDiscoveryEvent(
-              type: BonsoirDiscoveryEventType.DISCOVERY_SERVICE_FOUND,
-              service: BonsoirService(
-                name: event.name,
-                type: event.type,
-                port: -1,
-              ),
-            );
-          },
-        ),
-      ),
-    ).then((_) => _pendingServices = []);
   }
 
   Future<void> resolveService(AvahiServiceBrowserItemNew newService) async {
@@ -145,7 +140,7 @@ class LinuxDBusBonsoirDiscovery
   Future<void> stop() async {
     for (var entries in _subscriptions.entries) {
       // Not awaiting because DBus has a bug where the cancelation never ends?
-      entries.value.cancel();
+      await entries.value.cancel();
     }
     controller!.add(BonsoirDiscoveryEvent(
         type: BonsoirDiscoveryEventType.DISCOVERY_STOPPED));
