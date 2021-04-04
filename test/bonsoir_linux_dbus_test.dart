@@ -94,7 +94,8 @@ void main() {
                   var resolved = event.service as ResolvedBonsoirService;
                   var matchService = resolved.name == svcName &&
                       resolved.port == svcPort &&
-                      resolved.type == svcType;
+                      resolved.type == svcType &&
+                      resolved.ip!.isNotEmpty;
                   if (matchService) {
                     resolvedAtLeastOnce = true;
                     return matchService;
