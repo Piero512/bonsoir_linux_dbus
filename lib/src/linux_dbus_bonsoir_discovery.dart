@@ -32,20 +32,24 @@ class LinuxDBusBonsoirDiscovery
     if (mayor <= 0 && minor <= 7) {
       print("Enabling workaround for V1 API with the 100ms wait behavior. "
           "Update your Avahi version to 0.8 or later if you want this warning to disappear.");
-      _subscriptions['workaround'] = DBusSignalStream(busClient,
+      _subscriptions['workaround'] = busClient
+          .subscribeSignals(
               sender: 'org.freedesktop.Avahi',
               interface: 'org.freedesktop.Avahi.ServiceBrowser',
-              name: 'ItemNew')
+              member: 'ItemNew')
           .listen((signal) {
         var event = AvahiServiceBrowserItemNew(signal);
         if (event.type == this.type) {
           print("Cached service received: ${event.friendlyString}");
-          if (controller != null) {
-            var svc =
-                BonsoirService(name: event.name, type: event.type, port: -1);
-            controller!.add(BonsoirDiscoveryEvent(
-                type: BonsoirDiscoveryEventType.DISCOVERY_SERVICE_FOUND,
-                service: svc));
+          if(controller != null){
+            var svc = BonsoirService(
+              name: event.name,
+              type: event.type,
+              port: -1
+            );
+            controller!.add(
+              BonsoirDiscoveryEvent(type: BonsoirDiscoveryEventType.DISCOVERY_SERVICE_FOUND, service: svc)
+            );
             resolveService(event);
           } else {
             throw "Controller is null, even though it shouldn't";
@@ -73,7 +77,8 @@ class LinuxDBusBonsoirDiscovery
   Future<void> start() async {
     controller!.add(BonsoirDiscoveryEvent(
         type: BonsoirDiscoveryEventType.DISCOVERY_STARTED));
-    _subscriptions['ItemNew'] = _browser.itemNew.listen((event) async {
+    _subscriptions['ItemNew'] =
+        _browser.subscribeItemNew().listen((event) async {
       print("Item added! ${event.friendlyString}");
       controller!.add(
         BonsoirDiscoveryEvent(
@@ -83,7 +88,7 @@ class LinuxDBusBonsoirDiscovery
       );
       resolveService(event);
     });
-    _subscriptions['ItemRm'] = _browser.itemRemove.listen((event) {
+    _subscriptions['ItemRm'] = _browser.subscribeItemRemove().listen((event) {
       print("Item removed! ${event.friendlyString}");
       var key =
           '${event.protocol}.${event.interfaceValue}.${event.name}.${event.type}';

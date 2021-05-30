@@ -45,222 +45,178 @@ class AvahiServerStateChanged extends DBusSignal {
 }
 
 class AvahiServer extends DBusRemoteObject {
-  /// Stream of org.freedesktop.Avahi.Server.StateChanged signals.
-  late final Stream<AvahiServerStateChanged> stateChanged;
-
   AvahiServer(DBusClient client, String destination, DBusObjectPath path)
-      : super(client, destination, path) {
-    stateChanged = DBusRemoteObjectSignalStream(
-            this, 'org.freedesktop.Avahi.Server', 'StateChanged',
-            signature: DBusSignature('is'))
-        .map((signal) => AvahiServerStateChanged(signal));
-  }
+      : super(client, destination, path);
 
   /// Invokes org.freedesktop.DBus.Introspectable.Introspect()
-  Future<String> callIntrospect(
-      {bool noAutoStart = false,
-      bool allowInteractiveAuthorization = false}) async {
+  Future<String> callIntrospect() async {
     var result = await callMethod(
-        'org.freedesktop.DBus.Introspectable', 'Introspect', [],
-        replySignature: DBusSignature('s'),
-        noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+        'org.freedesktop.DBus.Introspectable', 'Introspect', []);
+    if (result.signature != DBusSignature('s')) {
+      throw 'org.freedesktop.DBus.Introspectable.Introspect returned invalid values \${result.values}';
+    }
     return (result.returnValues[0] as DBusString).value;
   }
 
   /// Invokes org.freedesktop.Avahi.Server.GetVersionString()
-  Future<String> callGetVersionString(
-      {bool noAutoStart = false,
-      bool allowInteractiveAuthorization = false}) async {
+  Future<String> callGetVersionString() async {
     var result = await callMethod(
-        'org.freedesktop.Avahi.Server', 'GetVersionString', [],
-        replySignature: DBusSignature('s'),
-        noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+        'org.freedesktop.Avahi.Server', 'GetVersionString', []);
+    if (result.signature != DBusSignature('s')) {
+      throw 'org.freedesktop.Avahi.Server.GetVersionString returned invalid values \${result.values}';
+    }
     return (result.returnValues[0] as DBusString).value;
   }
 
   /// Invokes org.freedesktop.Avahi.Server.GetAPIVersion()
-  Future<int> callGetAPIVersion(
-      {bool noAutoStart = false,
-      bool allowInteractiveAuthorization = false}) async {
-    var result = await callMethod(
-        'org.freedesktop.Avahi.Server', 'GetAPIVersion', [],
-        replySignature: DBusSignature('u'),
-        noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+  Future<int> callGetAPIVersion() async {
+    var result =
+        await callMethod('org.freedesktop.Avahi.Server', 'GetAPIVersion', []);
+    if (result.signature != DBusSignature('u')) {
+      throw 'org.freedesktop.Avahi.Server.GetAPIVersion returned invalid values \${result.values}';
+    }
     return (result.returnValues[0] as DBusUint32).value;
   }
 
   /// Invokes org.freedesktop.Avahi.Server.GetHostName()
-  Future<String> callGetHostName(
-      {bool noAutoStart = false,
-      bool allowInteractiveAuthorization = false}) async {
-    var result = await callMethod(
-        'org.freedesktop.Avahi.Server', 'GetHostName', [],
-        replySignature: DBusSignature('s'),
-        noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+  Future<String> callGetHostName() async {
+    var result =
+        await callMethod('org.freedesktop.Avahi.Server', 'GetHostName', []);
+    if (result.signature != DBusSignature('s')) {
+      throw 'org.freedesktop.Avahi.Server.GetHostName returned invalid values \${result.values}';
+    }
     return (result.returnValues[0] as DBusString).value;
   }
 
   /// Invokes org.freedesktop.Avahi.Server.SetHostName()
-  Future<void> callSetHostName(String name,
-      {bool noAutoStart = false,
-      bool allowInteractiveAuthorization = false}) async {
-    await callMethod(
-        'org.freedesktop.Avahi.Server', 'SetHostName', [DBusString(name)],
-        replySignature: DBusSignature(''),
-        noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+  Future<void> callSetHostName(String name) async {
+    var result = await callMethod(
+        'org.freedesktop.Avahi.Server', 'SetHostName', [DBusString(name)]);
+    if (result.signature != DBusSignature('')) {
+      throw 'org.freedesktop.Avahi.Server.SetHostName returned invalid values \${result.values}';
+    }
   }
 
   /// Invokes org.freedesktop.Avahi.Server.GetHostNameFqdn()
-  Future<String> callGetHostNameFqdn(
-      {bool noAutoStart = false,
-      bool allowInteractiveAuthorization = false}) async {
-    var result = await callMethod(
-        'org.freedesktop.Avahi.Server', 'GetHostNameFqdn', [],
-        replySignature: DBusSignature('s'),
-        noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+  Future<String> callGetHostNameFqdn() async {
+    var result =
+        await callMethod('org.freedesktop.Avahi.Server', 'GetHostNameFqdn', []);
+    if (result.signature != DBusSignature('s')) {
+      throw 'org.freedesktop.Avahi.Server.GetHostNameFqdn returned invalid values \${result.values}';
+    }
     return (result.returnValues[0] as DBusString).value;
   }
 
   /// Invokes org.freedesktop.Avahi.Server.GetDomainName()
-  Future<String> callGetDomainName(
-      {bool noAutoStart = false,
-      bool allowInteractiveAuthorization = false}) async {
-    var result = await callMethod(
-        'org.freedesktop.Avahi.Server', 'GetDomainName', [],
-        replySignature: DBusSignature('s'),
-        noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+  Future<String> callGetDomainName() async {
+    var result =
+        await callMethod('org.freedesktop.Avahi.Server', 'GetDomainName', []);
+    if (result.signature != DBusSignature('s')) {
+      throw 'org.freedesktop.Avahi.Server.GetDomainName returned invalid values \${result.values}';
+    }
     return (result.returnValues[0] as DBusString).value;
   }
 
   /// Invokes org.freedesktop.Avahi.Server.IsNSSSupportAvailable()
-  Future<bool> callIsNSSSupportAvailable(
-      {bool noAutoStart = false,
-      bool allowInteractiveAuthorization = false}) async {
+  Future<bool> callIsNSSSupportAvailable() async {
     var result = await callMethod(
-        'org.freedesktop.Avahi.Server', 'IsNSSSupportAvailable', [],
-        replySignature: DBusSignature('b'),
-        noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+        'org.freedesktop.Avahi.Server', 'IsNSSSupportAvailable', []);
+    if (result.signature != DBusSignature('b')) {
+      throw 'org.freedesktop.Avahi.Server.IsNSSSupportAvailable returned invalid values \${result.values}';
+    }
     return (result.returnValues[0] as DBusBoolean).value;
   }
 
   /// Invokes org.freedesktop.Avahi.Server.GetState()
-  Future<int> callGetState(
-      {bool noAutoStart = false,
-      bool allowInteractiveAuthorization = false}) async {
-    var result = await callMethod(
-        'org.freedesktop.Avahi.Server', 'GetState', [],
-        replySignature: DBusSignature('i'),
-        noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+  Future<int> callGetState() async {
+    var result =
+        await callMethod('org.freedesktop.Avahi.Server', 'GetState', []);
+    if (result.signature != DBusSignature('i')) {
+      throw 'org.freedesktop.Avahi.Server.GetState returned invalid values \${result.values}';
+    }
     return (result.returnValues[0] as DBusInt32).value;
   }
 
   /// Invokes org.freedesktop.Avahi.Server.GetLocalServiceCookie()
-  Future<int> callGetLocalServiceCookie(
-      {bool noAutoStart = false,
-      bool allowInteractiveAuthorization = false}) async {
+  Future<int> callGetLocalServiceCookie() async {
     var result = await callMethod(
-        'org.freedesktop.Avahi.Server', 'GetLocalServiceCookie', [],
-        replySignature: DBusSignature('u'),
-        noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+        'org.freedesktop.Avahi.Server', 'GetLocalServiceCookie', []);
+    if (result.signature != DBusSignature('u')) {
+      throw 'org.freedesktop.Avahi.Server.GetLocalServiceCookie returned invalid values \${result.values}';
+    }
     return (result.returnValues[0] as DBusUint32).value;
   }
 
   /// Invokes org.freedesktop.Avahi.Server.GetAlternativeHostName()
-  Future<String> callGetAlternativeHostName(String name,
-      {bool noAutoStart = false,
-      bool allowInteractiveAuthorization = false}) async {
+  Future<String> callGetAlternativeHostName(String name) async {
     var result = await callMethod('org.freedesktop.Avahi.Server',
-        'GetAlternativeHostName', [DBusString(name)],
-        replySignature: DBusSignature('s'),
-        noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+        'GetAlternativeHostName', [DBusString(name)]);
+    if (result.signature != DBusSignature('s')) {
+      throw 'org.freedesktop.Avahi.Server.GetAlternativeHostName returned invalid values \${result.values}';
+    }
     return (result.returnValues[0] as DBusString).value;
   }
 
   /// Invokes org.freedesktop.Avahi.Server.GetAlternativeServiceName()
-  Future<String> callGetAlternativeServiceName(String name,
-      {bool noAutoStart = false,
-      bool allowInteractiveAuthorization = false}) async {
+  Future<String> callGetAlternativeServiceName(String name) async {
     var result = await callMethod('org.freedesktop.Avahi.Server',
-        'GetAlternativeServiceName', [DBusString(name)],
-        replySignature: DBusSignature('s'),
-        noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+        'GetAlternativeServiceName', [DBusString(name)]);
+    if (result.signature != DBusSignature('s')) {
+      throw 'org.freedesktop.Avahi.Server.GetAlternativeServiceName returned invalid values \${result.values}';
+    }
     return (result.returnValues[0] as DBusString).value;
   }
 
   /// Invokes org.freedesktop.Avahi.Server.GetNetworkInterfaceNameByIndex()
-  Future<String> callGetNetworkInterfaceNameByIndex(int index,
-      {bool noAutoStart = false,
-      bool allowInteractiveAuthorization = false}) async {
+  Future<String> callGetNetworkInterfaceNameByIndex(int index) async {
     var result = await callMethod('org.freedesktop.Avahi.Server',
-        'GetNetworkInterfaceNameByIndex', [DBusInt32(index)],
-        replySignature: DBusSignature('s'),
-        noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+        'GetNetworkInterfaceNameByIndex', [DBusInt32(index)]);
+    if (result.signature != DBusSignature('s')) {
+      throw 'org.freedesktop.Avahi.Server.GetNetworkInterfaceNameByIndex returned invalid values \${result.values}';
+    }
     return (result.returnValues[0] as DBusString).value;
   }
 
   /// Invokes org.freedesktop.Avahi.Server.GetNetworkInterfaceIndexByName()
-  Future<int> callGetNetworkInterfaceIndexByName(String name,
-      {bool noAutoStart = false,
-      bool allowInteractiveAuthorization = false}) async {
+  Future<int> callGetNetworkInterfaceIndexByName(String name) async {
     var result = await callMethod('org.freedesktop.Avahi.Server',
-        'GetNetworkInterfaceIndexByName', [DBusString(name)],
-        replySignature: DBusSignature('i'),
-        noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+        'GetNetworkInterfaceIndexByName', [DBusString(name)]);
+    if (result.signature != DBusSignature('i')) {
+      throw 'org.freedesktop.Avahi.Server.GetNetworkInterfaceIndexByName returned invalid values \${result.values}';
+    }
     return (result.returnValues[0] as DBusInt32).value;
   }
 
   /// Invokes org.freedesktop.Avahi.Server.ResolveHostName()
-  Future<List<DBusValue>> callResolveHostName(
-      int interface, int protocol, String name, int aprotocol, int flags,
-      {bool noAutoStart = false,
-      bool allowInteractiveAuthorization = false}) async {
-    var result = await callMethod(
-        'org.freedesktop.Avahi.Server',
-        'ResolveHostName',
-        [
-          DBusInt32(interface),
-          DBusInt32(protocol),
-          DBusString(name),
-          DBusInt32(aprotocol),
-          DBusUint32(flags)
-        ],
-        replySignature: DBusSignature('iisisu'),
-        noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+  Future<List<DBusValue>> callResolveHostName(int interface, int protocol,
+      String name, int aprotocol, int flags) async {
+    var result =
+        await callMethod('org.freedesktop.Avahi.Server', 'ResolveHostName', [
+      DBusInt32(interface),
+      DBusInt32(protocol),
+      DBusString(name),
+      DBusInt32(aprotocol),
+      DBusUint32(flags)
+    ]);
+    if (result.signature != DBusSignature('iisisu')) {
+      throw 'org.freedesktop.Avahi.Server.ResolveHostName returned invalid values \${result.values}';
+    }
     return result.returnValues;
   }
 
   /// Invokes org.freedesktop.Avahi.Server.ResolveAddress()
   Future<List<DBusValue>> callResolveAddress(
-      int interface, int protocol, String address, int flags,
-      {bool noAutoStart = false,
-      bool allowInteractiveAuthorization = false}) async {
-    var result = await callMethod(
-        'org.freedesktop.Avahi.Server',
-        'ResolveAddress',
-        [
-          DBusInt32(interface),
-          DBusInt32(protocol),
-          DBusString(address),
-          DBusUint32(flags)
-        ],
-        replySignature: DBusSignature('iiissu'),
-        noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+      int interface, int protocol, String address, int flags) async {
+    var result =
+        await callMethod('org.freedesktop.Avahi.Server', 'ResolveAddress', [
+      DBusInt32(interface),
+      DBusInt32(protocol),
+      DBusString(address),
+      DBusUint32(flags)
+    ]);
+    if (result.signature != DBusSignature('iiissu')) {
+      throw 'org.freedesktop.Avahi.Server.ResolveAddress returned invalid values \${result.values}';
+    }
     return result.returnValues;
   }
 
@@ -290,162 +246,145 @@ class AvahiServer extends DBusRemoteObject {
   }
 
   /// Invokes org.freedesktop.Avahi.Server.EntryGroupNew()
-  Future<String> callEntryGroupNew(
-      {bool noAutoStart = false,
-      bool allowInteractiveAuthorization = false}) async {
-    var result = await callMethod(
-        'org.freedesktop.Avahi.Server', 'EntryGroupNew', [],
-        replySignature: DBusSignature('o'),
-        noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+  Future<String> callEntryGroupNew() async {
+    var result =
+        await callMethod('org.freedesktop.Avahi.Server', 'EntryGroupNew', []);
+    if (result.signature != DBusSignature('o')) {
+      throw 'org.freedesktop.Avahi.Server.EntryGroupNew returned invalid values \${result.values}';
+    }
     return (result.returnValues[0] as DBusObjectPath).value;
   }
 
   /// Invokes org.freedesktop.Avahi.Server.DomainBrowserNew()
   Future<String> callDomainBrowserNew(
-      int interface, int protocol, String domain, int btype, int flags,
-      {bool noAutoStart = false,
-      bool allowInteractiveAuthorization = false}) async {
-    var result = await callMethod(
-        'org.freedesktop.Avahi.Server',
-        'DomainBrowserNew',
-        [
-          DBusInt32(interface),
-          DBusInt32(protocol),
-          DBusString(domain),
-          DBusInt32(btype),
-          DBusUint32(flags)
-        ],
-        replySignature: DBusSignature('o'),
-        noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+      int interface, int protocol, String domain, int btype, int flags) async {
+    var result =
+        await callMethod('org.freedesktop.Avahi.Server', 'DomainBrowserNew', [
+      DBusInt32(interface),
+      DBusInt32(protocol),
+      DBusString(domain),
+      DBusInt32(btype),
+      DBusUint32(flags)
+    ]);
+    if (result.signature != DBusSignature('o')) {
+      throw 'org.freedesktop.Avahi.Server.DomainBrowserNew returned invalid values \${result.values}';
+    }
     return (result.returnValues[0] as DBusObjectPath).value;
   }
 
   /// Invokes org.freedesktop.Avahi.Server.ServiceTypeBrowserNew()
   Future<String> callServiceTypeBrowserNew(
-      int interface, int protocol, String domain, int flags,
-      {bool noAutoStart = false,
-      bool allowInteractiveAuthorization = false}) async {
+      int interface, int protocol, String domain, int flags) async {
     var result = await callMethod(
-        'org.freedesktop.Avahi.Server',
-        'ServiceTypeBrowserNew',
-        [
-          DBusInt32(interface),
-          DBusInt32(protocol),
-          DBusString(domain),
-          DBusUint32(flags)
-        ],
-        replySignature: DBusSignature('o'),
-        noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+        'org.freedesktop.Avahi.Server', 'ServiceTypeBrowserNew', [
+      DBusInt32(interface),
+      DBusInt32(protocol),
+      DBusString(domain),
+      DBusUint32(flags)
+    ]);
+    if (result.signature != DBusSignature('o')) {
+      throw 'org.freedesktop.Avahi.Server.ServiceTypeBrowserNew returned invalid values \${result.values}';
+    }
     return (result.returnValues[0] as DBusObjectPath).value;
   }
 
   /// Invokes org.freedesktop.Avahi.Server.ServiceBrowserNew()
-  Future<String> callServiceBrowserNew(
-      int interface, int protocol, String type, String domain, int flags,
-      {bool noAutoStart = false,
-      bool allowInteractiveAuthorization = false}) async {
-    var result = await callMethod(
-        'org.freedesktop.Avahi.Server',
-        'ServiceBrowserNew',
-        [
-          DBusInt32(interface),
-          DBusInt32(protocol),
-          DBusString(type),
-          DBusString(domain),
-          DBusUint32(flags)
-        ],
-        replySignature: DBusSignature('o'),
-        noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+  Future<String> callServiceBrowserNew(int interface, int protocol, String type,
+      String domain, int flags) async {
+    var result =
+        await callMethod('org.freedesktop.Avahi.Server', 'ServiceBrowserNew', [
+      DBusInt32(interface),
+      DBusInt32(protocol),
+      DBusString(type),
+      DBusString(domain),
+      DBusUint32(flags)
+    ]);
+    if (result.signature != DBusSignature('o')) {
+      throw 'org.freedesktop.Avahi.Server.ServiceBrowserNew returned invalid values \${result.values}';
+    }
     return (result.returnValues[0] as DBusObjectPath).value;
   }
 
   /// Invokes org.freedesktop.Avahi.Server.ServiceResolverNew()
   Future<String> callServiceResolverNew(int interface, int protocol,
-      String name, String type, String domain, int aprotocol, int flags,
-      {bool noAutoStart = false,
-      bool allowInteractiveAuthorization = false}) async {
-    var result = await callMethod(
-        'org.freedesktop.Avahi.Server',
-        'ServiceResolverNew',
-        [
-          DBusInt32(interface),
-          DBusInt32(protocol),
-          DBusString(name),
-          DBusString(type),
-          DBusString(domain),
-          DBusInt32(aprotocol),
-          DBusUint32(flags)
-        ],
-        replySignature: DBusSignature('o'),
-        noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+      String name, String type, String domain, int aprotocol, int flags) async {
+    var result =
+        await callMethod('org.freedesktop.Avahi.Server', 'ServiceResolverNew', [
+      DBusInt32(interface),
+      DBusInt32(protocol),
+      DBusString(name),
+      DBusString(type),
+      DBusString(domain),
+      DBusInt32(aprotocol),
+      DBusUint32(flags)
+    ]);
+    if (result.signature != DBusSignature('o')) {
+      throw 'org.freedesktop.Avahi.Server.ServiceResolverNew returned invalid values \${result.values}';
+    }
     return (result.returnValues[0] as DBusObjectPath).value;
   }
 
   /// Invokes org.freedesktop.Avahi.Server.HostNameResolverNew()
-  Future<String> callHostNameResolverNew(
-      int interface, int protocol, String name, int aprotocol, int flags,
-      {bool noAutoStart = false,
-      bool allowInteractiveAuthorization = false}) async {
+  Future<String> callHostNameResolverNew(int interface, int protocol,
+      String name, int aprotocol, int flags) async {
     var result = await callMethod(
-        'org.freedesktop.Avahi.Server',
-        'HostNameResolverNew',
-        [
-          DBusInt32(interface),
-          DBusInt32(protocol),
-          DBusString(name),
-          DBusInt32(aprotocol),
-          DBusUint32(flags)
-        ],
-        replySignature: DBusSignature('o'),
-        noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+        'org.freedesktop.Avahi.Server', 'HostNameResolverNew', [
+      DBusInt32(interface),
+      DBusInt32(protocol),
+      DBusString(name),
+      DBusInt32(aprotocol),
+      DBusUint32(flags)
+    ]);
+    if (result.signature != DBusSignature('o')) {
+      throw 'org.freedesktop.Avahi.Server.HostNameResolverNew returned invalid values \${result.values}';
+    }
     return (result.returnValues[0] as DBusObjectPath).value;
   }
 
   /// Invokes org.freedesktop.Avahi.Server.AddressResolverNew()
   Future<String> callAddressResolverNew(
-      int interface, int protocol, String address, int flags,
-      {bool noAutoStart = false,
-      bool allowInteractiveAuthorization = false}) async {
-    var result = await callMethod(
-        'org.freedesktop.Avahi.Server',
-        'AddressResolverNew',
-        [
-          DBusInt32(interface),
-          DBusInt32(protocol),
-          DBusString(address),
-          DBusUint32(flags)
-        ],
-        replySignature: DBusSignature('o'),
-        noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+      int interface, int protocol, String address, int flags) async {
+    var result =
+        await callMethod('org.freedesktop.Avahi.Server', 'AddressResolverNew', [
+      DBusInt32(interface),
+      DBusInt32(protocol),
+      DBusString(address),
+      DBusUint32(flags)
+    ]);
+    if (result.signature != DBusSignature('o')) {
+      throw 'org.freedesktop.Avahi.Server.AddressResolverNew returned invalid values \${result.values}';
+    }
     return (result.returnValues[0] as DBusObjectPath).value;
   }
 
   /// Invokes org.freedesktop.Avahi.Server.RecordBrowserNew()
-  Future<String> callRecordBrowserNew(
-      int interface, int protocol, String name, int clazz, int type, int flags,
-      {bool noAutoStart = false,
-      bool allowInteractiveAuthorization = false}) async {
-    var result = await callMethod(
-        'org.freedesktop.Avahi.Server',
-        'RecordBrowserNew',
-        [
-          DBusInt32(interface),
-          DBusInt32(protocol),
-          DBusString(name),
-          DBusUint16(clazz),
-          DBusUint16(type),
-          DBusUint32(flags)
-        ],
-        replySignature: DBusSignature('o'),
-        noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+  Future<String> callRecordBrowserNew(int interface, int protocol, String name,
+      int clazz, int type, int flags) async {
+    var result =
+        await callMethod('org.freedesktop.Avahi.Server', 'RecordBrowserNew', [
+      DBusInt32(interface),
+      DBusInt32(protocol),
+      DBusString(name),
+      DBusUint16(clazz),
+      DBusUint16(type),
+      DBusUint32(flags)
+    ]);
+    if (result.signature != DBusSignature('o')) {
+      throw 'org.freedesktop.Avahi.Server.RecordBrowserNew returned invalid values \${result.values}';
+    }
     return (result.returnValues[0] as DBusObjectPath).value;
+  }
+
+  /// Subscribes to org.freedesktop.Avahi.Server.StateChanged.
+  Stream<AvahiServerStateChanged> subscribeStateChanged() {
+    var signals =
+        subscribeSignal('org.freedesktop.Avahi.Server', 'StateChanged');
+    return signals.map((signal) {
+      if (signal.signature == DBusSignature('is')) {
+        return AvahiServerStateChanged(signal);
+      } else {
+        throw 'org.freedesktop.Avahi.Server.StateChanged contains invalid values \${signal.values}';
+      }
+    });
   }
 }

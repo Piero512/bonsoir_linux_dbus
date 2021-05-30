@@ -7,7 +7,7 @@ import 'package:dbus/dbus.dart';
 class AvahiServiceResolverFound extends DBusSignal {
   int get interfaceValue => (values[0] as DBusInt32).value;
   int get protocol => (values[1] as DBusInt32).value;
-  String get serviceName => (values[2] as DBusString).value;
+  String get name => (values[2] as DBusString).value;
   String get type => (values[3] as DBusString).value;
   String get domain => (values[4] as DBusString).value;
   String get host => (values[5] as DBusString).value;
@@ -38,55 +38,61 @@ class AvahiServiceResolverFailure extends DBusSignal {
 }
 
 class AvahiServiceResolver extends DBusRemoteObject {
-  /// Stream of org.freedesktop.Avahi.ServiceResolver.Found signals.
-  late final Stream<AvahiServiceResolverFound> found;
-
-  /// Stream of org.freedesktop.Avahi.ServiceResolver.Failure signals.
-  late final Stream<AvahiServiceResolverFailure> failure;
-
   AvahiServiceResolver(
       DBusClient client, String destination, DBusObjectPath path)
-      : super(client, destination, path) {
-    found = DBusRemoteObjectSignalStream(
-            this, 'org.freedesktop.Avahi.ServiceResolver', 'Found',
-            signature: DBusSignature('iissssisqaayu'))
-        .map((signal) => AvahiServiceResolverFound(signal));
-
-    failure = DBusRemoteObjectSignalStream(
-            this, 'org.freedesktop.Avahi.ServiceResolver', 'Failure',
-            signature: DBusSignature('s'))
-        .map((signal) => AvahiServiceResolverFailure(signal));
-  }
+      : super(client, destination, path);
 
   /// Invokes org.freedesktop.DBus.Introspectable.Introspect()
-  Future<String> callIntrospect(
-      {bool noAutoStart = false,
-      bool allowInteractiveAuthorization = false}) async {
+  Future<String> callIntrospect() async {
     var result = await callMethod(
-        'org.freedesktop.DBus.Introspectable', 'Introspect', [],
-        replySignature: DBusSignature('s'),
-        noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+        'org.freedesktop.DBus.Introspectable', 'Introspect', []);
+    if (result.signature != DBusSignature('s')) {
+      throw 'org.freedesktop.DBus.Introspectable.Introspect returned invalid values \${result.values}';
+    }
     return (result.returnValues[0] as DBusString).value;
   }
 
   /// Invokes org.freedesktop.Avahi.ServiceResolver.Free()
-  Future<void> callFree(
-      {bool noAutoStart = false,
-      bool allowInteractiveAuthorization = false}) async {
-    await callMethod('org.freedesktop.Avahi.ServiceResolver', 'Free', [],
-        replySignature: DBusSignature(''),
-        noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+  Future<void> callFree() async {
+    var result =
+        await callMethod('org.freedesktop.Avahi.ServiceResolver', 'Free', []);
+    if (result.signature != DBusSignature('')) {
+      throw 'org.freedesktop.Avahi.ServiceResolver.Free returned invalid values \${result.values}';
+    }
   }
 
   /// Invokes org.freedesktop.Avahi.ServiceResolver.Start()
-  Future<void> callStart(
-      {bool noAutoStart = false,
-      bool allowInteractiveAuthorization = false}) async {
-    await callMethod('org.freedesktop.Avahi.ServiceResolver', 'Start', [],
-        replySignature: DBusSignature(''),
-        noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+  Future<void> callStart() async {
+    var result =
+        await callMethod('org.freedesktop.Avahi.ServiceResolver', 'Start', []);
+    if (result.signature != DBusSignature('')) {
+      throw 'org.freedesktop.Avahi.ServiceResolver.Start returned invalid values \${result.values}';
+    }
+  }
+
+  /// Subscribes to org.freedesktop.Avahi.ServiceResolver.Found.
+  Stream<AvahiServiceResolverFound> subscribeFound() {
+    var signals =
+        subscribeSignal('org.freedesktop.Avahi.ServiceResolver', 'Found');
+    return signals.map((signal) {
+      if (signal.signature == DBusSignature('iissssisqaayu')) {
+        return AvahiServiceResolverFound(signal);
+      } else {
+        throw 'org.freedesktop.Avahi.ServiceResolver.Found contains invalid values \${signal.values}';
+      }
+    });
+  }
+
+  /// Subscribes to org.freedesktop.Avahi.ServiceResolver.Failure.
+  Stream<AvahiServiceResolverFailure> subscribeFailure() {
+    var signals =
+        subscribeSignal('org.freedesktop.Avahi.ServiceResolver', 'Failure');
+    return signals.map((signal) {
+      if (signal.signature == DBusSignature('s')) {
+        return AvahiServiceResolverFailure(signal);
+      } else {
+        throw 'org.freedesktop.Avahi.ServiceResolver.Failure contains invalid values \${signal.values}';
+      }
+    });
   }
 }
