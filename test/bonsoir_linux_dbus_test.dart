@@ -119,9 +119,9 @@ void main() {
                 "has eventType == Stopped")
           ]));
       await Future.wait([bcast.start(), discover.start()]);
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(Duration(seconds: 5));
       await bcast.stop();
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(Duration(seconds: 5));
       await discover.stop();
       await expected;
       expect(
