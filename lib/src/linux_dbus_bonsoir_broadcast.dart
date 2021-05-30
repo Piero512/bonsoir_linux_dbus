@@ -31,9 +31,7 @@ class LinuxDBusBonsoirBroadcast
 
   @override
   Future<void> start() async {
-    
-    _subscriptions['StateChanged'] =
-        _entryGroup.subscribeStateChanged().listen((event) {
+    _subscriptions['StateChanged'] = _entryGroup.stateChanged.listen((event) {
       switch (event.state.toAvahiEntryGroupState()) {
         case AvahiEntryGroupState.AVAHI_ENTRY_GROUP_UNCOMMITED:
         case AvahiEntryGroupState.AVAHI_ENTRY_GROUP_REGISTERING:

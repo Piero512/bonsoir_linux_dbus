@@ -51,99 +51,78 @@ class AvahiDomainBrowserCacheExhausted extends DBusSignal {
 }
 
 class AvahiDomainBrowser extends DBusRemoteObject {
+  /// Stream of org.freedesktop.Avahi.DomainBrowser.ItemNew signals.
+  late final Stream<AvahiDomainBrowserItemNew> itemNew;
+
+  /// Stream of org.freedesktop.Avahi.DomainBrowser.ItemRemove signals.
+  late final Stream<AvahiDomainBrowserItemRemove> itemRemove;
+
+  /// Stream of org.freedesktop.Avahi.DomainBrowser.Failure signals.
+  late final Stream<AvahiDomainBrowserFailure> failure;
+
+  /// Stream of org.freedesktop.Avahi.DomainBrowser.AllForNow signals.
+  late final Stream<AvahiDomainBrowserAllForNow> allForNow;
+
+  /// Stream of org.freedesktop.Avahi.DomainBrowser.CacheExhausted signals.
+  late final Stream<AvahiDomainBrowserCacheExhausted> cacheExhausted;
+
   AvahiDomainBrowser(DBusClient client, String destination, DBusObjectPath path)
-      : super(client, destination, path);
+      : super(client, destination, path) {
+    itemNew = DBusRemoteObjectSignalStream(
+            this, 'org.freedesktop.Avahi.DomainBrowser', 'ItemNew',
+            signature: DBusSignature('iisu'))
+        .map((signal) => AvahiDomainBrowserItemNew(signal));
+
+    itemRemove = DBusRemoteObjectSignalStream(
+            this, 'org.freedesktop.Avahi.DomainBrowser', 'ItemRemove',
+            signature: DBusSignature('iisu'))
+        .map((signal) => AvahiDomainBrowserItemRemove(signal));
+
+    failure = DBusRemoteObjectSignalStream(
+            this, 'org.freedesktop.Avahi.DomainBrowser', 'Failure',
+            signature: DBusSignature('s'))
+        .map((signal) => AvahiDomainBrowserFailure(signal));
+
+    allForNow = DBusRemoteObjectSignalStream(
+            this, 'org.freedesktop.Avahi.DomainBrowser', 'AllForNow',
+            signature: DBusSignature(''))
+        .map((signal) => AvahiDomainBrowserAllForNow(signal));
+
+    cacheExhausted = DBusRemoteObjectSignalStream(
+            this, 'org.freedesktop.Avahi.DomainBrowser', 'CacheExhausted',
+            signature: DBusSignature(''))
+        .map((signal) => AvahiDomainBrowserCacheExhausted(signal));
+  }
 
   /// Invokes org.freedesktop.DBus.Introspectable.Introspect()
-  Future<String> callIntrospect() async {
+  Future<String> callIntrospect(
+      {bool noAutoStart = false,
+      bool allowInteractiveAuthorization = false}) async {
     var result = await callMethod(
-        'org.freedesktop.DBus.Introspectable', 'Introspect', []);
-    if (result.signature != DBusSignature('s')) {
-      throw 'org.freedesktop.DBus.Introspectable.Introspect returned invalid values \${result.values}';
-    }
+        'org.freedesktop.DBus.Introspectable', 'Introspect', [],
+        replySignature: DBusSignature('s'),
+        noAutoStart: noAutoStart,
+        allowInteractiveAuthorization: allowInteractiveAuthorization);
     return (result.returnValues[0] as DBusString).value;
   }
 
   /// Invokes org.freedesktop.Avahi.DomainBrowser.Free()
-  Future<void> callFree() async {
-    var result =
-        await callMethod('org.freedesktop.Avahi.DomainBrowser', 'Free', []);
-    if (result.signature != DBusSignature('')) {
-      throw 'org.freedesktop.Avahi.DomainBrowser.Free returned invalid values \${result.values}';
-    }
+  Future<void> callFree(
+      {bool noAutoStart = false,
+      bool allowInteractiveAuthorization = false}) async {
+    await callMethod('org.freedesktop.Avahi.DomainBrowser', 'Free', [],
+        replySignature: DBusSignature(''),
+        noAutoStart: noAutoStart,
+        allowInteractiveAuthorization: allowInteractiveAuthorization);
   }
 
   /// Invokes org.freedesktop.Avahi.DomainBrowser.Start()
-  Future<void> callStart() async {
-    var result =
-        await callMethod('org.freedesktop.Avahi.DomainBrowser', 'Start', []);
-    if (result.signature != DBusSignature('')) {
-      throw 'org.freedesktop.Avahi.DomainBrowser.Start returned invalid values \${result.values}';
-    }
-  }
-
-  /// Subscribes to org.freedesktop.Avahi.DomainBrowser.ItemNew.
-  Stream<AvahiDomainBrowserItemNew> subscribeItemNew() {
-    var signals =
-        subscribeSignal('org.freedesktop.Avahi.DomainBrowser', 'ItemNew');
-    return signals.map((signal) {
-      if (signal.signature == DBusSignature('iisu')) {
-        return AvahiDomainBrowserItemNew(signal);
-      } else {
-        throw 'org.freedesktop.Avahi.DomainBrowser.ItemNew contains invalid values \${signal.values}';
-      }
-    });
-  }
-
-  /// Subscribes to org.freedesktop.Avahi.DomainBrowser.ItemRemove.
-  Stream<AvahiDomainBrowserItemRemove> subscribeItemRemove() {
-    var signals =
-        subscribeSignal('org.freedesktop.Avahi.DomainBrowser', 'ItemRemove');
-    return signals.map((signal) {
-      if (signal.signature == DBusSignature('iisu')) {
-        return AvahiDomainBrowserItemRemove(signal);
-      } else {
-        throw 'org.freedesktop.Avahi.DomainBrowser.ItemRemove contains invalid values \${signal.values}';
-      }
-    });
-  }
-
-  /// Subscribes to org.freedesktop.Avahi.DomainBrowser.Failure.
-  Stream<AvahiDomainBrowserFailure> subscribeFailure() {
-    var signals =
-        subscribeSignal('org.freedesktop.Avahi.DomainBrowser', 'Failure');
-    return signals.map((signal) {
-      if (signal.signature == DBusSignature('s')) {
-        return AvahiDomainBrowserFailure(signal);
-      } else {
-        throw 'org.freedesktop.Avahi.DomainBrowser.Failure contains invalid values \${signal.values}';
-      }
-    });
-  }
-
-  /// Subscribes to org.freedesktop.Avahi.DomainBrowser.AllForNow.
-  Stream<AvahiDomainBrowserAllForNow> subscribeAllForNow() {
-    var signals =
-        subscribeSignal('org.freedesktop.Avahi.DomainBrowser', 'AllForNow');
-    return signals.map((signal) {
-      if (signal.values.isEmpty) {
-        return AvahiDomainBrowserAllForNow(signal);
-      } else {
-        throw 'org.freedesktop.Avahi.DomainBrowser.AllForNow contains invalid values \${signal.values}';
-      }
-    });
-  }
-
-  /// Subscribes to org.freedesktop.Avahi.DomainBrowser.CacheExhausted.
-  Stream<AvahiDomainBrowserCacheExhausted> subscribeCacheExhausted() {
-    var signals = subscribeSignal(
-        'org.freedesktop.Avahi.DomainBrowser', 'CacheExhausted');
-    return signals.map((signal) {
-      if (signal.values.isEmpty) {
-        return AvahiDomainBrowserCacheExhausted(signal);
-      } else {
-        throw 'org.freedesktop.Avahi.DomainBrowser.CacheExhausted contains invalid values \${signal.values}';
-      }
-    });
+  Future<void> callStart(
+      {bool noAutoStart = false,
+      bool allowInteractiveAuthorization = false}) async {
+    await callMethod('org.freedesktop.Avahi.DomainBrowser', 'Start', [],
+        replySignature: DBusSignature(''),
+        noAutoStart: noAutoStart,
+        allowInteractiveAuthorization: allowInteractiveAuthorization);
   }
 }
