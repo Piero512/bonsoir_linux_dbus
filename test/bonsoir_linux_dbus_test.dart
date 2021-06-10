@@ -66,7 +66,7 @@ void main() {
       var bcast = api.createBroadcast(
           BonsoirService(name: svcName, type: svcType, port: svcPort),
           printLogs: true);
-      var discover = api.createDiscovery("_bonsoire2e._tcp", printLogs: true);
+      var discover = api.createDiscovery(svcType, printLogs: true);
       await Future.wait([bcast.ready, discover.ready]);
       bool resolvedAtLeastOnce = false;
       bool lostAtLeastOnce = false;
@@ -119,9 +119,9 @@ void main() {
                 "has eventType == Stopped")
           ]));
       await Future.wait([bcast.start(), discover.start()]);
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(Duration(seconds: 5));
       await bcast.stop();
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(Duration(seconds: 5));
       await discover.stop();
       await expected;
       expect(

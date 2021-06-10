@@ -364,9 +364,15 @@ class AvahiServer extends DBusRemoteObject {
   }
 
   /// Invokes org.freedesktop.Avahi.Server.ServiceResolverNew()
-  Future<String> callServiceResolverNew(int interface, int protocol,
-      String name, String type, String domain, int aprotocol, int flags,
-      {bool noAutoStart = false,
+  Future<String> callServiceResolverNew(
+      {required int interface,
+      required int protocol,
+      required String name,
+      required String type,
+      required String domain,
+      required int aprotocol,
+      required int flags,
+      bool noAutoStart = false,
       bool allowInteractiveAuthorization = false}) async {
     var result = await callMethod(
         'org.freedesktop.Avahi.Server',

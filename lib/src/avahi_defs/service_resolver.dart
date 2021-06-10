@@ -1,6 +1,8 @@
 // This file was generated using the following command and may be overwritten.
 // dart-dbus generate-remote-object org.freedesktop.Avahi.ServiceResolver.xml
 
+import 'dart:convert';
+
 import 'package:dbus/dbus.dart';
 
 /// Signal data for org.freedesktop.Avahi.ServiceResolver.Found.
@@ -14,12 +16,13 @@ class AvahiServiceResolverFound extends DBusSignal {
   int get aprotocol => (values[6] as DBusInt32).value;
   String get address => (values[7] as DBusString).value;
   int get port => (values[8] as DBusUint16).value;
-  List<List<int>> get txt => (values[9] as DBusArray)
+  List<String> get txt => (values[9] as DBusArray)
       .children
       .map((child) => (child as DBusArray)
           .children
           .map((child) => (child as DBusByte).value)
           .toList())
+      .map((e) => utf8.decode(e))
       .toList();
   int get flags => (values[10] as DBusUint32).value;
 
@@ -87,6 +90,7 @@ class AvahiServiceResolver extends DBusRemoteObject {
     await callMethod('org.freedesktop.Avahi.ServiceResolver', 'Start', [],
         replySignature: DBusSignature(''),
         noAutoStart: noAutoStart,
-        allowInteractiveAuthorization: allowInteractiveAuthorization);
+        allowInteractiveAuthorization: allowInteractiveAuthorization,
+        noReplyExpected: true);
   }
 }

@@ -17,7 +17,8 @@ class LinuxDBusBonsoirDiscovery
   Map<String, StreamSubscription> _subscriptions = {};
   // Map of found system names to resolved addresses. Used to send removed services.
   Map<String, ResolvedBonsoirService> _resolvedServices = {};
-
+  bool? _isWorkaroundEnabled;
+  bool get isWorkAroundEnabled => _isWorkaroundEnabled ?? false;
   // Constructor. Receives service type and passes printLogs to parent class constructor.
   LinuxDBusBonsoirDiscovery(this.type, printLogs) : super(printLogs);
 
@@ -30,8 +31,9 @@ class LinuxDBusBonsoirDiscovery
     var minor = int.parse(version.split(".").last);
     var serviceBrowserPath;
     if (mayor <= 0 && minor <= 7) {
-      print("Enabling workaround for V1 API with the 100ms wait behavior. "
+      dbgPrint("Enabling workaround for V1 API with the 100ms wait behavior. "
           "Update your Avahi version to 0.8 or later if you want this warning to disappear.");
+      _isWorkaroundEnabled = true;
       _subscriptions['workaround'] = DBusSignalStream(busClient,
               sender: 'org.freedesktop.Avahi',
               interface: 'org.freedesktop.Avahi.ServiceBrowser',
@@ -96,13 +98,15 @@ class LinuxDBusBonsoirDiscovery
         ),
       );
     });
-    await _browser.callStart();
+    if (!isWorkAroundEnabled) {
+      await _browser.callStart();
+    }
   }
 
   Future<void> resolveService(AvahiServiceBrowserItemNew newService) async {
     var key =
         '${newService.protocol}.${newService.interfaceValue}.${newService.name}.${newService.type}';
-    dbgPrint("DBG: ${newService.friendlyString}");
+    dbgPrint("resolveService: ${newService.friendlyString}");
     var reply = AvahiServerResolvedService(await server.callResolveService(
         interface: newService.interfaceValue,
         protocol: newService.protocol,
@@ -110,7 +114,7 @@ class LinuxDBusBonsoirDiscovery
         type: newService.type,
         domain: newService.domain,
         answerProtocol: AvahiProtocolUnspecified,
-        flags: 0));
+        flags: newService.flags));
     dbgPrint("Service Resolved!");
     var resolvedBonsoirService = ResolvedBonsoirService(
       name: reply.name,
