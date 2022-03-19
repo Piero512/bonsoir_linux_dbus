@@ -1,16 +1,19 @@
-import 'linux_dbus_bonsoir_events.dart';
+import 'package:bonsoir_linux_dbus/src/avahi_defs/server.dart';
+
+import 'events.dart';
 import 'dart:async';
 import 'avahi_defs/entry_group.dart';
 import 'package:dbus/dbus.dart';
 import 'avahi_defs/constants.dart';
 import 'package:bonsoir_platform_interface/bonsoir_platform_interface.dart';
 
-class LinuxDBusBonsoirBroadcast
-    extends LinuxDBusBonsoirEvents<BonsoirBroadcastEvent> {
+class AvahiBonsoirBroadcast extends AvahiBonsoirEvents<BonsoirBroadcastEvent> {
   // Service received from Bonsoir
   final BonsoirService service;
+  late AvahiServer server;
+
   // Receives service from Bonsoir, and sends printLogs to superclass.
-  LinuxDBusBonsoirBroadcast(this.service, printLogs) : super(printLogs);
+  AvahiBonsoirBroadcast(this.service, printLogs) : super(printLogs);
 
   late AvahiEntryGroup _entryGroup;
 
@@ -18,6 +21,11 @@ class LinuxDBusBonsoirBroadcast
 
   @override
   Future<void> get ready async {
+    server = AvahiServer(
+      busClient,
+      'org.freedesktop.Avahi',
+      DBusObjectPath('/'),
+    );
     _entryGroup = AvahiEntryGroup(
       busClient,
       'org.freedesktop.Avahi',
@@ -75,7 +83,7 @@ class LinuxDBusBonsoirBroadcast
         host: '',
         port: svc.port,
         txt: service.attributes != null
-            ? LinuxDBusBonsoirEvents.convertAttributesToTxtRecord(
+            ? AvahiBonsoirEvents.convertAttributesToTxtRecord(
                 service.attributes!)
             : []);
   }

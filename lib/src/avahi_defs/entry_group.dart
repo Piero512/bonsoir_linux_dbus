@@ -6,11 +6,16 @@ import 'package:dbus/dbus.dart';
 /// Signal data for org.freedesktop.Avahi.EntryGroup.StateChanged.
 class AvahiEntryGroupStateChanged extends DBusSignal {
   int get state => (values[0] as DBusInt32).value;
+
   String get error => (values[1] as DBusString).value;
 
   AvahiEntryGroupStateChanged(DBusSignal signal)
-      : super(signal.sender, signal.path, signal.interface, signal.name,
-            signal.values);
+      : super(
+            sender: signal.sender,
+            path: signal.path,
+            interface: signal.interface,
+            name: signal.name,
+            values: signal.values);
 }
 
 class AvahiEntryGroup extends DBusRemoteObject {
@@ -18,10 +23,13 @@ class AvahiEntryGroup extends DBusRemoteObject {
   late final Stream<AvahiEntryGroupStateChanged> stateChanged;
 
   AvahiEntryGroup(DBusClient client, String destination, DBusObjectPath path)
-      : super(client, destination, path) {
+      : super(client, name: destination, path: path) {
     stateChanged = DBusRemoteObjectSignalStream(
-            this, 'org.freedesktop.Avahi.EntryGroup', 'StateChanged',
+            object: this,
+            interface: 'org.freedesktop.Avahi.EntryGroup',
+            name: 'StateChanged',
             signature: DBusSignature('is'))
+        .asBroadcastStream()
         .map((signal) => AvahiEntryGroupStateChanged(signal));
   }
 
@@ -92,8 +100,8 @@ class AvahiEntryGroup extends DBusRemoteObject {
   }
 
   /// Invokes org.freedesktop.Avahi.EntryGroup.AddService()
-  Future<void> callAddService(
-      {required int interface,
+  Future<void> callAddService({
+      required int interface,
       required int protocol,
       required int flags,
       required String name,
@@ -101,25 +109,27 @@ class AvahiEntryGroup extends DBusRemoteObject {
       required String domain,
       required String host,
       required int port,
-      required List<List<int>> txt}) async {
-    var result =
-        await callMethod('org.freedesktop.Avahi.EntryGroup', 'AddService', [
-      DBusInt32(interface),
-      DBusInt32(protocol),
-      DBusUint32(flags),
-      DBusString(name),
-      DBusString(type),
-      DBusString(domain),
-      DBusString(host),
-      DBusUint16(port),
-      DBusArray(
-          DBusSignature('ay'),
-          txt.map((child) => DBusArray(
-              DBusSignature('y'), child.map((child) => DBusByte(child)))))
-    ]);
-    if (result.signature != DBusSignature('')) {
-      throw 'org.freedesktop.Avahi.EntryGroup.AddService returned invalid values \${result.values}';
-    }
+      required List<List<int>> txt,
+      bool noAutoStart = false,
+      bool allowInteractiveAuthorization = false}) async {
+    await callMethod(
+        'org.freedesktop.Avahi.EntryGroup',
+        'AddService',
+        [
+          DBusInt32(interface),
+          DBusInt32(protocol),
+          DBusUint32(flags),
+          DBusString(name),
+          DBusString(type),
+          DBusString(domain),
+          DBusString(host),
+          DBusUint16(port),
+          DBusArray(
+              DBusSignature('ay'), txt.map((child) => DBusArray.byte(child)))
+        ],
+        replySignature: DBusSignature(''),
+        noAutoStart: noAutoStart,
+        allowInteractiveAuthorization: allowInteractiveAuthorization);
   }
 
   /// Invokes org.freedesktop.Avahi.EntryGroup.AddServiceSubtype()

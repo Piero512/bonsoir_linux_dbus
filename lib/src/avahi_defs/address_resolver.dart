@@ -6,15 +6,24 @@ import 'package:dbus/dbus.dart';
 /// Signal data for org.freedesktop.Avahi.AddressResolver.Found.
 class AvahiAddressResolverFound extends DBusSignal {
   int get interfaceValue => (values[0] as DBusInt32).value;
+
   int get protocol => (values[1] as DBusInt32).value;
+
   int get aprotocol => (values[2] as DBusInt32).value;
+
   String get address => (values[3] as DBusString).value;
+
   String get serviceName => (values[4] as DBusString).value;
+
   int get flags => (values[5] as DBusUint32).value;
 
   AvahiAddressResolverFound(DBusSignal signal)
-      : super(signal.sender, signal.path, signal.interface, signal.name,
-            signal.values);
+      : super(
+            sender: signal.sender,
+            path: signal.path,
+            interface: signal.interface,
+            name: signal.name,
+            values: signal.values);
 }
 
 /// Signal data for org.freedesktop.Avahi.AddressResolver.Failure.
@@ -22,8 +31,12 @@ class AvahiAddressResolverFailure extends DBusSignal {
   String get error => (values[0] as DBusString).value;
 
   AvahiAddressResolverFailure(DBusSignal signal)
-      : super(signal.sender, signal.path, signal.interface, signal.name,
-            signal.values);
+      : super(
+            sender: signal.sender,
+            path: signal.path,
+            interface: signal.interface,
+            name: signal.name,
+            values: signal.values);
 }
 
 class AvahiAddressResolver extends DBusRemoteObject {
@@ -35,15 +48,21 @@ class AvahiAddressResolver extends DBusRemoteObject {
 
   AvahiAddressResolver(
       DBusClient client, String destination, DBusObjectPath path)
-      : super(client, destination, path) {
+      : super(client, name: destination, path: path) {
     found = DBusRemoteObjectSignalStream(
-            this, 'org.freedesktop.Avahi.AddressResolver', 'Found',
+            object: this,
+            interface: 'org.freedesktop.Avahi.AddressResolver',
+            name: 'Found',
             signature: DBusSignature('iiissu'))
+        .asBroadcastStream()
         .map((signal) => AvahiAddressResolverFound(signal));
 
     failure = DBusRemoteObjectSignalStream(
-            this, 'org.freedesktop.Avahi.AddressResolver', 'Failure',
+            object: this,
+            interface: 'org.freedesktop.Avahi.AddressResolver',
+            name: 'Failure',
             signature: DBusSignature('s'))
+        .asBroadcastStream()
         .map((signal) => AvahiAddressResolverFailure(signal));
   }
 

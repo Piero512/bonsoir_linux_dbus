@@ -6,11 +6,16 @@ import 'package:dbus/dbus.dart';
 /// Signal data for org.freedesktop.Avahi.Server2.StateChanged.
 class AvahiServer2StateChanged extends DBusSignal {
   int get state => (values[0] as DBusInt32).value;
+
   String get error => (values[1] as DBusString).value;
 
   AvahiServer2StateChanged(DBusSignal signal)
-      : super(signal.sender, signal.path, signal.interface, signal.name,
-            signal.values);
+      : super(
+            sender: signal.sender,
+            path: signal.path,
+            interface: signal.interface,
+            name: signal.name,
+            values: signal.values);
 }
 
 class AvahiServer2 extends DBusRemoteObject {
@@ -18,9 +23,11 @@ class AvahiServer2 extends DBusRemoteObject {
   late final Stream<AvahiServer2StateChanged> stateChanged;
 
   AvahiServer2(DBusClient client, String destination, DBusObjectPath path)
-      : super(client, destination, path) {
+      : super(client, name: destination, path: path) {
     stateChanged = DBusRemoteObjectSignalStream(
-            this, 'org.freedesktop.Avahi.Server2', 'StateChanged',
+            object: this,
+            interface: 'org.freedesktop.Avahi.Server2',
+            name: 'StateChanged',
             signature: DBusSignature('is'))
         .map((signal) => AvahiServer2StateChanged(signal));
   }

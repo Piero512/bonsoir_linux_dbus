@@ -6,25 +6,39 @@ import 'package:dbus/dbus.dart';
 /// Signal data for org.freedesktop.Avahi.DomainBrowser.ItemNew.
 class AvahiDomainBrowserItemNew extends DBusSignal {
   int get interfaceValue => (values[0] as DBusInt32).value;
+
   int get protocol => (values[1] as DBusInt32).value;
+
   String get domain => (values[2] as DBusString).value;
+
   int get flags => (values[3] as DBusUint32).value;
 
   AvahiDomainBrowserItemNew(DBusSignal signal)
-      : super(signal.sender, signal.path, signal.interface, signal.name,
-            signal.values);
+      : super(
+            sender: signal.sender,
+            path: signal.path,
+            interface: signal.interface,
+            name: signal.name,
+            values: signal.values);
 }
 
 /// Signal data for org.freedesktop.Avahi.DomainBrowser.ItemRemove.
 class AvahiDomainBrowserItemRemove extends DBusSignal {
   int get interfaceValue => (values[0] as DBusInt32).value;
+
   int get protocol => (values[1] as DBusInt32).value;
+
   String get domain => (values[2] as DBusString).value;
+
   int get flags => (values[3] as DBusUint32).value;
 
   AvahiDomainBrowserItemRemove(DBusSignal signal)
-      : super(signal.sender, signal.path, signal.interface, signal.name,
-            signal.values);
+      : super(
+            sender: signal.sender,
+            path: signal.path,
+            interface: signal.interface,
+            name: signal.name,
+            values: signal.values);
 }
 
 /// Signal data for org.freedesktop.Avahi.DomainBrowser.Failure.
@@ -32,22 +46,34 @@ class AvahiDomainBrowserFailure extends DBusSignal {
   String get error => (values[0] as DBusString).value;
 
   AvahiDomainBrowserFailure(DBusSignal signal)
-      : super(signal.sender, signal.path, signal.interface, signal.name,
-            signal.values);
+      : super(
+            sender: signal.sender,
+            path: signal.path,
+            interface: signal.interface,
+            name: signal.name,
+            values: signal.values);
 }
 
 /// Signal data for org.freedesktop.Avahi.DomainBrowser.AllForNow.
 class AvahiDomainBrowserAllForNow extends DBusSignal {
   AvahiDomainBrowserAllForNow(DBusSignal signal)
-      : super(signal.sender, signal.path, signal.interface, signal.name,
-            signal.values);
+      : super(
+            sender: signal.sender,
+            path: signal.path,
+            interface: signal.interface,
+            name: signal.name,
+            values: signal.values);
 }
 
 /// Signal data for org.freedesktop.Avahi.DomainBrowser.CacheExhausted.
 class AvahiDomainBrowserCacheExhausted extends DBusSignal {
   AvahiDomainBrowserCacheExhausted(DBusSignal signal)
-      : super(signal.sender, signal.path, signal.interface, signal.name,
-            signal.values);
+      : super(
+            sender: signal.sender,
+            path: signal.path,
+            interface: signal.interface,
+            name: signal.name,
+            values: signal.values);
 }
 
 class AvahiDomainBrowser extends DBusRemoteObject {
@@ -67,30 +93,45 @@ class AvahiDomainBrowser extends DBusRemoteObject {
   late final Stream<AvahiDomainBrowserCacheExhausted> cacheExhausted;
 
   AvahiDomainBrowser(DBusClient client, String destination, DBusObjectPath path)
-      : super(client, destination, path) {
+      : super(client, name: destination, path: path) {
     itemNew = DBusRemoteObjectSignalStream(
-            this, 'org.freedesktop.Avahi.DomainBrowser', 'ItemNew',
+            object: this,
+            interface: 'org.freedesktop.Avahi.DomainBrowser',
+            name: 'ItemNew',
             signature: DBusSignature('iisu'))
+        .asBroadcastStream()
         .map((signal) => AvahiDomainBrowserItemNew(signal));
 
     itemRemove = DBusRemoteObjectSignalStream(
-            this, 'org.freedesktop.Avahi.DomainBrowser', 'ItemRemove',
+            object: this,
+            interface: 'org.freedesktop.Avahi.DomainBrowser',
+            name: 'ItemRemove',
             signature: DBusSignature('iisu'))
+        .asBroadcastStream()
         .map((signal) => AvahiDomainBrowserItemRemove(signal));
 
     failure = DBusRemoteObjectSignalStream(
-            this, 'org.freedesktop.Avahi.DomainBrowser', 'Failure',
+            object: this,
+            interface: 'org.freedesktop.Avahi.DomainBrowser',
+            name: 'Failure',
             signature: DBusSignature('s'))
+        .asBroadcastStream()
         .map((signal) => AvahiDomainBrowserFailure(signal));
 
     allForNow = DBusRemoteObjectSignalStream(
-            this, 'org.freedesktop.Avahi.DomainBrowser', 'AllForNow',
+            object: this,
+            interface: 'org.freedesktop.Avahi.DomainBrowser',
+            name: 'AllForNow',
             signature: DBusSignature(''))
+        .asBroadcastStream()
         .map((signal) => AvahiDomainBrowserAllForNow(signal));
 
     cacheExhausted = DBusRemoteObjectSignalStream(
-            this, 'org.freedesktop.Avahi.DomainBrowser', 'CacheExhausted',
+            object: this,
+            interface: 'org.freedesktop.Avahi.DomainBrowser',
+            name: 'CacheExhausted',
             signature: DBusSignature(''))
+        .asBroadcastStream()
         .map((signal) => AvahiDomainBrowserCacheExhausted(signal));
   }
 

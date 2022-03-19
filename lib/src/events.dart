@@ -39,19 +39,21 @@ extension ItemRemovePrintHelpers on AvahiServiceBrowserItemRemove {
   }
 }
 
-abstract class LinuxDBusBonsoirEvents<T extends BonsoirEvent>
+abstract class AvahiBonsoirEvents<T extends BonsoirEvent>
     extends BonsoirAction<T> {
-  DBusClient busClient = DBusClient.system();
-  late AvahiServer server;
+  late final DBusClient busClient;
   final bool printLogs;
   bool _isStopped = false;
   StreamController<T>? controller;
   @override
   Stream<T>? get eventStream => controller?.stream;
 
-  LinuxDBusBonsoirEvents(this.printLogs) {
-    server =
-        AvahiServer(busClient, 'org.freedesktop.Avahi', DBusObjectPath('/'));
+  AvahiBonsoirEvents(this.printLogs, {DBusClient? client}){
+    if(client != null){
+      busClient = client;
+    } else {
+      busClient = DBusClient.system();
+    }
   }
 
   @override
@@ -79,7 +81,7 @@ abstract class LinuxDBusBonsoirEvents<T extends BonsoirEvent>
     _isStopped = true;
   }
 
-  void dbgPrint(dynamic toPrint) {
+  void dbgPrint(Object? toPrint) {
     if (printLogs) {
       print(toPrint);
     }

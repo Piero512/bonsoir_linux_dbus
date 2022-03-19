@@ -1,3 +1,4 @@
+import 'package:async/async.dart';
 import 'package:bonsoir_platform_interface/bonsoir_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'dart:io' show Platform;
@@ -7,7 +8,8 @@ import 'package:bonsoir_linux_dbus/bonsoir_linux_dbus.dart';
 void main() {
   group('external_api', () {
     test('Able to create a discovery without D-Bus complaining', () async {
-      var api = BonsoirLinuxDBus();
+      var api = AvahiBonsoir();
+      await api.pickDiscoveryFactory();
       var discover = api.createDiscovery('_bonsoirlinux._tcp', printLogs: true);
       await discover.ready;
       await discover.start();
@@ -16,7 +18,8 @@ void main() {
       await discover.stop();
     });
     test('Able to create a broadcast without D-Bus complaining', () async {
-      var api = BonsoirLinuxDBus();
+      var api = AvahiBonsoir();
+      await api.pickDiscoveryFactory();
       var broadcast = api.createBroadcast(
           BonsoirService(
               name: "Bonsoir example service",
@@ -28,7 +31,8 @@ void main() {
       await broadcast.stop();
     });
     test('Broadcast sends expected messages', () async {
-      var api = BonsoirLinuxDBus();
+      var api = AvahiBonsoir();
+      await api.pickDiscoveryFactory();
       var broadcast = api.createBroadcast(
           BonsoirService(
               name: "Bonsoir example service",
@@ -59,7 +63,8 @@ void main() {
   }, skip: Platform.isLinux ? null : "Test can only be run on Linux");
   group('end-to-end', () {
     test('Broadcast name and receive them on service enumeration', () async {
-      var api = BonsoirLinuxDBus();
+      var api = AvahiBonsoir();
+      await api.pickDiscoveryFactory();
       const svcName = "Test service for numeration";
       const svcType = "_bonsoire2e._tcp";
       const svcPort = 3000;
@@ -71,61 +76,27 @@ void main() {
       bool resolvedAtLeastOnce = false;
       bool lostAtLeastOnce = false;
       bool foundAtLeastOnce = false;
-      var expected = expectLater(
-          discover.eventStream,
-          emitsInAnyOrder([
-            predicate<BonsoirDiscoveryEvent>(
-                (event) =>
-                    event.type == BonsoirDiscoveryEventType.DISCOVERY_STARTED,
-                "had eventType DiscoveryStarted"),
-            mayEmitMultiple(predicate<BonsoirDiscoveryEvent>((event) {
-              var found = event.type ==
-                  BonsoirDiscoveryEventType.DISCOVERY_SERVICE_FOUND;
-              if (found) {
-                foundAtLeastOnce = true;
-                return found;
-              }
-              return false;
-            }, "had eventType ServiceFound")),
-            mayEmitMultiple(predicate<BonsoirDiscoveryEvent>((event) {
-              if (event.type ==
-                  BonsoirDiscoveryEventType.DISCOVERY_SERVICE_RESOLVED) {
-                if (event.isServiceResolved) {
-                  var resolved = event.service as ResolvedBonsoirService;
-                  var matchService = resolved.name == svcName &&
-                      resolved.port == svcPort &&
-                      resolved.type == svcType &&
-                      resolved.ip!.isNotEmpty;
-                  if (matchService) {
-                    resolvedAtLeastOnce = true;
-                    return matchService;
-                  }
-                }
-              }
-              return false;
-            }, "matches the service type broadcasted first")),
-            mayEmitMultiple(predicate<BonsoirDiscoveryEvent>((event) {
-              var lost = event.type ==
-                  BonsoirDiscoveryEventType.DISCOVERY_SERVICE_LOST;
-              if (lost) {
-                lostAtLeastOnce = true;
-                return lost;
-              }
-              return false;
-            }, "has eventType == ServiceLost")),
-            predicate<BonsoirDiscoveryEvent>(
-                (event) =>
-                    event.type == BonsoirDiscoveryEventType.DISCOVERY_STOPPED,
-                "has eventType == Stopped")
-          ]));
-      await Future.wait([bcast.start(), discover.start()]);
+      final sub = discover.eventStream!.listen((event) {
+        if(event.type == BonsoirDiscoveryEventType.DISCOVERY_SERVICE_FOUND){
+          foundAtLeastOnce = true;
+        }
+        if(event.type == BonsoirDiscoveryEventType.DISCOVERY_SERVICE_RESOLVED){
+          resolvedAtLeastOnce = true;
+        }
+        if(event.type == BonsoirDiscoveryEventType.DISCOVERY_SERVICE_LOST){
+          lostAtLeastOnce = true;
+        }
+      });
+      await bcast.start();
+      await discover.start();
       await Future.delayed(Duration(seconds: 5));
       await bcast.stop();
       await Future.delayed(Duration(seconds: 5));
       await discover.stop();
-      await expected;
-      expect(
-          resolvedAtLeastOnce && lostAtLeastOnce && foundAtLeastOnce, isTrue);
+      sub.cancel();
+      expect(resolvedAtLeastOnce && lostAtLeastOnce && foundAtLeastOnce, isTrue,
+          reason:
+              'resolvedAtLeastOnce: $resolvedAtLeastOnce, lostAtleastOnce: $lostAtLeastOnce, foundAtLeastOnce: $foundAtLeastOnce');
     });
-  });
+  }, skip: Platform.isLinux ? null : "Test can only be run on Linux");
 }
