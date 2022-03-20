@@ -1,3 +1,7 @@
+## [0.1.4] - March 19th, 2022
+* Upgrade to latest DBus 0.7.1
+* Major refactoring, but no breakages expected.
+
 ## [0.1.3] - June 10th, 2021
 * Revert to version 0.1.1 until figuring out why package broke after upgrading to dbus 0.5.x
 

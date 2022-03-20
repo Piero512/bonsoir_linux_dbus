@@ -1,12 +1,12 @@
 import 'dart:async';
+import 'dart:convert' as conv;
 
-import 'package:bonsoir_linux_dbus/src/avahi_defs/server.dart';
 import 'package:bonsoir_linux_dbus/src/avahi_defs/service_browser.dart';
 import 'package:bonsoir_platform_interface/bonsoir_platform_interface.dart';
-import 'avahi_defs/constants.dart';
 import 'package:dbus/dbus.dart';
-import 'dart:convert' as conv;
 import 'package:meta/meta.dart';
+
+import 'avahi_defs/constants.dart';
 
 extension LinuxAvahi on BonsoirService {
   BonsoirService copyWith(
@@ -39,19 +39,22 @@ extension ItemRemovePrintHelpers on AvahiServiceBrowserItemRemove {
   }
 }
 
-abstract class LinuxDBusBonsoirEvents<T extends BonsoirEvent>
+abstract class AvahiBonsoirEvents<T extends BonsoirEvent>
     extends BonsoirAction<T> {
-  DBusClient busClient = DBusClient.system();
-  late AvahiServer server;
+  late final DBusClient busClient;
   final bool printLogs;
   bool _isStopped = false;
   StreamController<T>? controller;
+
   @override
   Stream<T>? get eventStream => controller?.stream;
 
-  LinuxDBusBonsoirEvents(this.printLogs) {
-    server =
-        AvahiServer(busClient, 'org.freedesktop.Avahi', DBusObjectPath('/'));
+  AvahiBonsoirEvents(this.printLogs, {DBusClient? client}) {
+    if (client != null) {
+      busClient = client;
+    } else {
+      busClient = DBusClient.system();
+    }
   }
 
   @override
@@ -79,7 +82,7 @@ abstract class LinuxDBusBonsoirEvents<T extends BonsoirEvent>
     _isStopped = true;
   }
 
-  void dbgPrint(dynamic toPrint) {
+  void dbgPrint(Object? toPrint) {
     if (printLogs) {
       print(toPrint);
     }

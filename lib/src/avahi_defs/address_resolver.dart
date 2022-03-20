@@ -6,15 +6,24 @@ import 'package:dbus/dbus.dart';
 /// Signal data for org.freedesktop.Avahi.AddressResolver.Found.
 class AvahiAddressResolverFound extends DBusSignal {
   int get interfaceValue => (values[0] as DBusInt32).value;
+
   int get protocol => (values[1] as DBusInt32).value;
+
   int get aprotocol => (values[2] as DBusInt32).value;
+
   String get address => (values[3] as DBusString).value;
-  String get name => (values[4] as DBusString).value;
+
+  String get serviceName => (values[4] as DBusString).value;
+
   int get flags => (values[5] as DBusUint32).value;
 
   AvahiAddressResolverFound(DBusSignal signal)
-      : super(signal.sender, signal.path, signal.interface, signal.name,
-            signal.values);
+      : super(
+            sender: signal.sender,
+            path: signal.path,
+            interface: signal.interface,
+            name: signal.name,
+            values: signal.values);
 }
 
 /// Signal data for org.freedesktop.Avahi.AddressResolver.Failure.
@@ -22,66 +31,70 @@ class AvahiAddressResolverFailure extends DBusSignal {
   String get error => (values[0] as DBusString).value;
 
   AvahiAddressResolverFailure(DBusSignal signal)
-      : super(signal.sender, signal.path, signal.interface, signal.name,
-            signal.values);
+      : super(
+            sender: signal.sender,
+            path: signal.path,
+            interface: signal.interface,
+            name: signal.name,
+            values: signal.values);
 }
 
 class AvahiAddressResolver extends DBusRemoteObject {
+  /// Stream of org.freedesktop.Avahi.AddressResolver.Found signals.
+  late final Stream<AvahiAddressResolverFound> found;
+
+  /// Stream of org.freedesktop.Avahi.AddressResolver.Failure signals.
+  late final Stream<AvahiAddressResolverFailure> failure;
+
   AvahiAddressResolver(
       DBusClient client, String destination, DBusObjectPath path)
-      : super(client, destination, path);
+      : super(client, name: destination, path: path) {
+    found = DBusRemoteObjectSignalStream(
+            object: this,
+            interface: 'org.freedesktop.Avahi.AddressResolver',
+            name: 'Found',
+            signature: DBusSignature('iiissu'))
+        .asBroadcastStream()
+        .map((signal) => AvahiAddressResolverFound(signal));
+
+    failure = DBusRemoteObjectSignalStream(
+            object: this,
+            interface: 'org.freedesktop.Avahi.AddressResolver',
+            name: 'Failure',
+            signature: DBusSignature('s'))
+        .asBroadcastStream()
+        .map((signal) => AvahiAddressResolverFailure(signal));
+  }
 
   /// Invokes org.freedesktop.DBus.Introspectable.Introspect()
-  Future<String> callIntrospect() async {
+  Future<String> callIntrospect(
+      {bool noAutoStart = false,
+      bool allowInteractiveAuthorization = false}) async {
     var result = await callMethod(
-        'org.freedesktop.DBus.Introspectable', 'Introspect', []);
-    if (result.signature != DBusSignature('s')) {
-      throw 'org.freedesktop.DBus.Introspectable.Introspect returned invalid values \${result.values}';
-    }
+        'org.freedesktop.DBus.Introspectable', 'Introspect', [],
+        replySignature: DBusSignature('s'),
+        noAutoStart: noAutoStart,
+        allowInteractiveAuthorization: allowInteractiveAuthorization);
     return (result.returnValues[0] as DBusString).value;
   }
 
   /// Invokes org.freedesktop.Avahi.AddressResolver.Free()
-  Future<void> callFree() async {
-    var result =
-        await callMethod('org.freedesktop.Avahi.AddressResolver', 'Free', []);
-    if (result.signature != DBusSignature('')) {
-      throw 'org.freedesktop.Avahi.AddressResolver.Free returned invalid values \${result.values}';
-    }
+  Future<void> callFree(
+      {bool noAutoStart = false,
+      bool allowInteractiveAuthorization = false}) async {
+    await callMethod('org.freedesktop.Avahi.AddressResolver', 'Free', [],
+        replySignature: DBusSignature(''),
+        noAutoStart: noAutoStart,
+        allowInteractiveAuthorization: allowInteractiveAuthorization);
   }
 
   /// Invokes org.freedesktop.Avahi.AddressResolver.Start()
-  Future<void> callStart() async {
-    var result =
-        await callMethod('org.freedesktop.Avahi.AddressResolver', 'Start', []);
-    if (result.signature != DBusSignature('')) {
-      throw 'org.freedesktop.Avahi.AddressResolver.Start returned invalid values \${result.values}';
-    }
-  }
-
-  /// Subscribes to org.freedesktop.Avahi.AddressResolver.Found.
-  Stream<AvahiAddressResolverFound> subscribeFound() {
-    var signals =
-        subscribeSignal('org.freedesktop.Avahi.AddressResolver', 'Found');
-    return signals.map((signal) {
-      if (signal.signature == DBusSignature('iiissu')) {
-        return AvahiAddressResolverFound(signal);
-      } else {
-        throw 'org.freedesktop.Avahi.AddressResolver.Found contains invalid values \${signal.values}';
-      }
-    });
-  }
-
-  /// Subscribes to org.freedesktop.Avahi.AddressResolver.Failure.
-  Stream<AvahiAddressResolverFailure> subscribeFailure() {
-    var signals =
-        subscribeSignal('org.freedesktop.Avahi.AddressResolver', 'Failure');
-    return signals.map((signal) {
-      if (signal.signature == DBusSignature('s')) {
-        return AvahiAddressResolverFailure(signal);
-      } else {
-        throw 'org.freedesktop.Avahi.AddressResolver.Failure contains invalid values \${signal.values}';
-      }
-    });
+  Future<void> callStart(
+      {bool noAutoStart = false,
+      bool allowInteractiveAuthorization = false}) async {
+    await callMethod('org.freedesktop.Avahi.AddressResolver', 'Start', [],
+        replySignature: DBusSignature(''),
+        noAutoStart: noAutoStart,
+        allowInteractiveAuthorization: allowInteractiveAuthorization);
   }
 }

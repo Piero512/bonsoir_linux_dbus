@@ -1,6 +1,6 @@
 name: bonsoir_linux_dbus
-description: Linux platform interface for bonsoir package.
-version: '0.1.3'
+description: Linux platform interface for bonsoir package. This package is useful for Linux desktop systems where Avahi is a commonly installed mDNS daemon.
+version: '0.1.4'
 homepage: https://github.com/Piero512/bonsoir_linux_dbus
 repository: https://github.com/Piero512/bonsoir_linux_dbus
 
@@ -11,15 +11,16 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  dbus: ^0.3.3
-  bonsoir_platform_interface: ^1.1.0
+  dbus: ^0.7.1
   meta: ^1.3.0
+  bonsoir_platform_interface: ^1.1.0
 
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  async:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
