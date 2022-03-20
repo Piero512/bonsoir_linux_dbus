@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:bonsoir_linux_dbus/src/avahi_defs/server.dart';
 import 'package:bonsoir_linux_dbus/src/avahi_defs/service_browser.dart';
 import 'package:bonsoir_platform_interface/bonsoir_platform_interface.dart';
 import 'avahi_defs/constants.dart';

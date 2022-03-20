@@ -39,9 +39,8 @@ class AvahiBonsoirBroadcast extends AvahiBonsoirEvents<BonsoirBroadcastEvent> {
 
   @override
   Future<void> start() async {
-    
     _subscriptions['StateChanged'] =
-        _entryGroup.subscribeStateChanged().listen((event) {
+        _entryGroup.stateChanged.listen((event) {
       switch (event.state.toAvahiEntryGroupState()) {
         case AvahiEntryGroupState.AVAHI_ENTRY_GROUP_UNCOMMITED:
         case AvahiEntryGroupState.AVAHI_ENTRY_GROUP_REGISTERING:

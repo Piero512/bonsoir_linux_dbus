@@ -56,7 +56,6 @@ abstract class AvahiBonsoirDiscovery
 }
 
 class LegacyClient extends AvahiBonsoirDiscovery {
-  final Map<String, AvahiServiceBrowserItemNew> _discovered = {};
   final Map<String, ResolvedBonsoirService> _resolvedServices = {};
   final Map<String, List<String>> _pendingReasons = {};
   late AvahiServiceBrowser _browser;

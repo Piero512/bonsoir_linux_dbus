@@ -1,4 +1,3 @@
-import 'package:async/async.dart';
 import 'package:bonsoir_platform_interface/bonsoir_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'dart:io' show Platform;
