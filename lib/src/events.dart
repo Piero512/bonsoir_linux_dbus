@@ -1,11 +1,12 @@
 import 'dart:async';
+import 'dart:convert' as conv;
 
 import 'package:bonsoir_linux_dbus/src/avahi_defs/service_browser.dart';
 import 'package:bonsoir_platform_interface/bonsoir_platform_interface.dart';
-import 'avahi_defs/constants.dart';
 import 'package:dbus/dbus.dart';
-import 'dart:convert' as conv;
 import 'package:meta/meta.dart';
+
+import 'avahi_defs/constants.dart';
 
 extension LinuxAvahi on BonsoirService {
   BonsoirService copyWith(
@@ -44,11 +45,12 @@ abstract class AvahiBonsoirEvents<T extends BonsoirEvent>
   final bool printLogs;
   bool _isStopped = false;
   StreamController<T>? controller;
+
   @override
   Stream<T>? get eventStream => controller?.stream;
 
-  AvahiBonsoirEvents(this.printLogs, {DBusClient? client}){
-    if(client != null){
+  AvahiBonsoirEvents(this.printLogs, {DBusClient? client}) {
+    if (client != null) {
       busClient = client;
     } else {
       busClient = DBusClient.system();

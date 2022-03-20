@@ -1,11 +1,12 @@
-import 'package:bonsoir_linux_dbus/src/avahi_defs/server.dart';
-
-import 'events.dart';
 import 'dart:async';
-import 'avahi_defs/entry_group.dart';
-import 'package:dbus/dbus.dart';
-import 'avahi_defs/constants.dart';
+
+import 'package:bonsoir_linux_dbus/src/avahi_defs/server.dart';
 import 'package:bonsoir_platform_interface/bonsoir_platform_interface.dart';
+import 'package:dbus/dbus.dart';
+
+import 'avahi_defs/constants.dart';
+import 'avahi_defs/entry_group.dart';
+import 'events.dart';
 
 class AvahiBonsoirBroadcast extends AvahiBonsoirEvents<BonsoirBroadcastEvent> {
   // Service received from Bonsoir
@@ -39,8 +40,7 @@ class AvahiBonsoirBroadcast extends AvahiBonsoirEvents<BonsoirBroadcastEvent> {
 
   @override
   Future<void> start() async {
-    _subscriptions['StateChanged'] =
-        _entryGroup.stateChanged.listen((event) {
+    _subscriptions['StateChanged'] = _entryGroup.stateChanged.listen((event) {
       switch (event.state.toAvahiEntryGroupState()) {
         case AvahiEntryGroupState.AVAHI_ENTRY_GROUP_UNCOMMITED:
         case AvahiEntryGroupState.AVAHI_ENTRY_GROUP_REGISTERING:

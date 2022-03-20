@@ -1,14 +1,15 @@
 import 'dart:async';
+
 import 'package:bonsoir_linux_dbus/src/avahi_defs/constants.dart';
 import 'package:bonsoir_linux_dbus/src/avahi_defs/server.dart';
 import 'package:bonsoir_linux_dbus/src/avahi_defs/service_browser.dart';
 import 'package:bonsoir_linux_dbus/src/exceptions.dart';
+import 'package:bonsoir_platform_interface/bonsoir_platform_interface.dart';
 import 'package:dbus/dbus.dart';
 
 import 'avahi_defs/server2.dart';
 import 'avahi_defs/service_resolver.dart';
 import 'events.dart';
-import 'package:bonsoir_platform_interface/bonsoir_platform_interface.dart';
 
 extension KGResolver on AvahiServiceResolverFound {
   String get key => '$protocol.$interfaceValue.$serviceName.$type';
@@ -169,9 +170,8 @@ class LegacyClient extends AvahiBonsoirDiscovery {
 
   @override
   Future<void> start() async {
-    controller!.add(
-      BonsoirDiscoveryEvent(type: BonsoirDiscoveryEventType.DISCOVERY_STARTED)
-    );
+    controller!.add(BonsoirDiscoveryEvent(
+        type: BonsoirDiscoveryEventType.DISCOVERY_STARTED));
     final browserPath = await _server.callServiceBrowserNew(
       interface: AvahiIfIndexUnspecified,
       protocol: AvahiProtocolUnspecified,

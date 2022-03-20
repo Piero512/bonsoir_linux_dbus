@@ -1,9 +1,10 @@
 // This file was generated using the following command and may be overwritten.
 // dart-dbus generate-remote-object org.freedesktop.Avahi.Server.xml
 
+import 'dart:convert' show utf8;
+
 import 'package:bonsoir_linux_dbus/src/avahi_defs/constants.dart';
 import 'package:dbus/dbus.dart';
-import 'dart:convert' show utf8;
 
 /// Return value of org.freedesktop.Avahi.Server.ResolveService.
 class AvahiServerResolvedService extends DBusStruct {

@@ -100,8 +100,8 @@ class AvahiEntryGroup extends DBusRemoteObject {
   }
 
   /// Invokes org.freedesktop.Avahi.EntryGroup.AddService()
-  Future<void> callAddService({
-      required int interface,
+  Future<void> callAddService(
+      {required int interface,
       required int protocol,
       required int flags,
       required String name,

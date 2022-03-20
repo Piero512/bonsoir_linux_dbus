@@ -76,13 +76,14 @@ void main() {
       bool lostAtLeastOnce = false;
       bool foundAtLeastOnce = false;
       final sub = discover.eventStream!.listen((event) {
-        if(event.type == BonsoirDiscoveryEventType.DISCOVERY_SERVICE_FOUND){
+        if (event.type == BonsoirDiscoveryEventType.DISCOVERY_SERVICE_FOUND) {
           foundAtLeastOnce = true;
         }
-        if(event.type == BonsoirDiscoveryEventType.DISCOVERY_SERVICE_RESOLVED){
+        if (event.type ==
+            BonsoirDiscoveryEventType.DISCOVERY_SERVICE_RESOLVED) {
           resolvedAtLeastOnce = true;
         }
-        if(event.type == BonsoirDiscoveryEventType.DISCOVERY_SERVICE_LOST){
+        if (event.type == BonsoirDiscoveryEventType.DISCOVERY_SERVICE_LOST) {
           lostAtLeastOnce = true;
         }
       });
