@@ -31,4 +31,4 @@ flutter:
     implements: bonsoir
     platforms:
       linux:
-        dartPluginClass: BonsoirLinuxDBus
+        dartPluginClass: AvahiBonsoir
