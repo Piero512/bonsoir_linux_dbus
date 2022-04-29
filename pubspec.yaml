@@ -1,6 +1,6 @@
 name: bonsoir_linux_dbus
 description: Linux platform interface for bonsoir package. This package is useful for Linux desktop systems where Avahi is a commonly installed mDNS daemon.
-version: '0.1.4'
+version: '0.1.5'
 homepage: https://github.com/Piero512/bonsoir_linux_dbus
 repository: https://github.com/Piero512/bonsoir_linux_dbus
 

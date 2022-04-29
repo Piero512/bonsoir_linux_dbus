@@ -1,3 +1,6 @@
+## [0.1.5] - April 29, 2022
+* Fix issue with plugin registration on Flutter.
+
 ## [0.1.4] - March 19th, 2022
 * Upgrade to latest DBus 0.7.1
 * Major refactoring, but no breakages expected.
