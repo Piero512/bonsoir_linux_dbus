@@ -26,7 +26,7 @@ extension KGBrowser on AvahiServiceBrowserItemRemove {
 ResolvedBonsoirService bonsoirServiceFromFoundService(
     AvahiServiceResolverFound resolvedService) {
   return ResolvedBonsoirService(
-      name: resolvedService.name,
+      name: resolvedService.serviceName,
       type: resolvedService.type,
       ip: resolvedService.address,
       port: resolvedService.port,
