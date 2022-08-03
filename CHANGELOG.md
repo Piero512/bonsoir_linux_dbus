@@ -1,3 +1,6 @@
+## [0.2.0] - August 3, 2022
+* Upgrade to the latest bonsoir platform interface to be compatible with Bonsoir 2.0
+
 ## [0.1.5] - April 29, 2022
 * Fix issue with plugin registration on Flutter.
 
