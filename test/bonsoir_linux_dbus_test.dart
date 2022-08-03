@@ -1,9 +1,10 @@
+@TestOn('linux && vm')
+
 import 'package:bonsoir_platform_interface/bonsoir_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'dart:io' show Platform;
 import 'package:bonsoir_linux_dbus/bonsoir_linux_dbus.dart';
 
-@TestOn('linux && vm')
 void main() {
   group('external_api', () {
     test('Able to create a discovery without D-Bus complaining', () async {
