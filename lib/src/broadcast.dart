@@ -47,7 +47,7 @@ class AvahiBonsoirBroadcast extends AvahiBonsoirEvents<BonsoirBroadcastEvent> {
           break;
         case AvahiEntryGroupState.AVAHI_ENTRY_GROUP_ESTABLISHED:
           controller!.add(BonsoirBroadcastEvent(
-              type: BonsoirBroadcastEventType.BROADCAST_STARTED,
+              type: BonsoirBroadcastEventType.broadcastStarted,
               service: service));
           break;
         case AvahiEntryGroupState.AVAHI_ENTRY_GROUP_COLLISION:
@@ -96,7 +96,7 @@ class AvahiBonsoirBroadcast extends AvahiBonsoirEvents<BonsoirBroadcastEvent> {
     }
     await _entryGroup.callFree();
     controller!.add(BonsoirBroadcastEvent(
-        type: BonsoirBroadcastEventType.BROADCAST_STOPPED));
+        type: BonsoirBroadcastEventType.broadcastStopped));
     super.stop();
   }
 

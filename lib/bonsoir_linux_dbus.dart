@@ -40,13 +40,13 @@ class AvahiBonsoir extends BonsoirPlatformInterface {
   }
 
   @override
-  BonsoirAction<BonsoirBroadcastEvent> createBroadcast(service,
+  BonsoirAction<BonsoirBroadcastEvent> createBroadcastAction(service,
       {bool printLogs = kDebugMode}) {
     return AvahiBonsoirBroadcast(service, printLogs);
   }
 
   @override
-  BonsoirAction<BonsoirDiscoveryEvent> createDiscovery(String type,
+  BonsoirAction<BonsoirDiscoveryEvent> createDiscoveryAction(String type,
       {bool printLogs = kDebugMode}) {
     return _discoveryFactory(type, printLogs);
   }
