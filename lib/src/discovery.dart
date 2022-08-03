@@ -48,7 +48,7 @@ abstract class AvahiBonsoirDiscovery
     }
     _subscriptions.clear();
     controller!.add(BonsoirDiscoveryEvent(
-        type: BonsoirDiscoveryEventType.DISCOVERY_STOPPED));
+        type: BonsoirDiscoveryEventType.discoveryStopped));
     super.stop();
   }
 
@@ -86,13 +86,13 @@ class LegacyClient extends AvahiBonsoirDiscovery {
           );
           controller!.add(
             BonsoirDiscoveryEvent(
-              type: BonsoirDiscoveryEventType.DISCOVERY_SERVICE_FOUND,
+              type: BonsoirDiscoveryEventType.discoveryServiceFound,
               service: svc,
             ),
           );
           final service = await resolveService(event);
           controller!.add(BonsoirDiscoveryEvent(
-              type: BonsoirDiscoveryEventType.DISCOVERY_SERVICE_RESOLVED,
+              type: BonsoirDiscoveryEventType.discoveryServiceResolved,
               service: service));
         } else {
           throw 'Controller should be defined already!';
@@ -114,7 +114,7 @@ class LegacyClient extends AvahiBonsoirDiscovery {
             port: -1,
           );
           controller!.add(BonsoirDiscoveryEvent(
-              type: BonsoirDiscoveryEventType.DISCOVERY_SERVICE_LOST,
+              type: BonsoirDiscoveryEventType.discoveryServiceLost,
               service: svc));
         } else {
           throw 'Controller should be defined already!';
@@ -171,7 +171,7 @@ class LegacyClient extends AvahiBonsoirDiscovery {
   @override
   Future<void> start() async {
     controller!.add(BonsoirDiscoveryEvent(
-        type: BonsoirDiscoveryEventType.DISCOVERY_STARTED));
+        type: BonsoirDiscoveryEventType.discoveryStarted));
     final browserPath = await _server.callServiceBrowserNew(
       interface: AvahiIfIndexUnspecified,
       protocol: AvahiProtocolUnspecified,
@@ -216,19 +216,19 @@ class V2Client extends AvahiBonsoirDiscovery {
   @override
   Future<void> start() async {
     controller!.add(BonsoirDiscoveryEvent(
-        type: BonsoirDiscoveryEventType.DISCOVERY_STARTED));
+        type: BonsoirDiscoveryEventType.discoveryStarted));
     _subscriptions['ItemNew'] = _browser.itemNew.listen((event) async {
       print("Item added! ${event.friendlyString}");
       controller!.add(
         BonsoirDiscoveryEvent(
-          type: BonsoirDiscoveryEventType.DISCOVERY_SERVICE_FOUND,
+          type: BonsoirDiscoveryEventType.discoveryServiceFound,
           service: BonsoirService(name: event.name, type: event.type, port: -1),
         ),
       );
       var resolvedService = await resolveService(event);
       controller!.add(
         BonsoirDiscoveryEvent(
-          type: BonsoirDiscoveryEventType.DISCOVERY_SERVICE_RESOLVED,
+          type: BonsoirDiscoveryEventType.discoveryServiceResolved,
           service: resolvedService,
         ),
       );
@@ -240,7 +240,7 @@ class V2Client extends AvahiBonsoirDiscovery {
       _resolvedServices.remove(event.key);
       controller!.add(
         BonsoirDiscoveryEvent(
-          type: BonsoirDiscoveryEventType.DISCOVERY_SERVICE_LOST,
+          type: BonsoirDiscoveryEventType.discoveryServiceLost,
           service: toRemove,
         ),
       );

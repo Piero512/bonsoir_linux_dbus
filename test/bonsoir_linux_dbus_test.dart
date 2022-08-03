@@ -1,15 +1,17 @@
+@TestOn('linux && vm')
+
 import 'package:bonsoir_platform_interface/bonsoir_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'dart:io' show Platform;
 import 'package:bonsoir_linux_dbus/bonsoir_linux_dbus.dart';
 
-@TestOn('linux && vm')
 void main() {
   group('external_api', () {
     test('Able to create a discovery without D-Bus complaining', () async {
       var api = AvahiBonsoir();
       await api.pickDiscoveryFactory();
-      var discover = api.createDiscovery('_bonsoirlinux._tcp', printLogs: true);
+      var discover =
+          api.createDiscoveryAction('_bonsoirlinux._tcp', printLogs: true);
       await discover.ready;
       await discover.start();
       // Await the workaround
@@ -19,7 +21,7 @@ void main() {
     test('Able to create a broadcast without D-Bus complaining', () async {
       var api = AvahiBonsoir();
       await api.pickDiscoveryFactory();
-      var broadcast = api.createBroadcast(
+      var broadcast = api.createBroadcastAction(
           BonsoirService(
               name: "Bonsoir example service",
               type: "_bonsoirlinux._tcp",
@@ -32,7 +34,7 @@ void main() {
     test('Broadcast sends expected messages', () async {
       var api = AvahiBonsoir();
       await api.pickDiscoveryFactory();
-      var broadcast = api.createBroadcast(
+      var broadcast = api.createBroadcastAction(
           BonsoirService(
               name: "Bonsoir example service",
               type: "_bonsoirlinux._tcp",
@@ -44,11 +46,11 @@ void main() {
         emitsInOrder([
           predicate<BonsoirBroadcastEvent>(
               (event) =>
-                  event.type == BonsoirBroadcastEventType.BROADCAST_STARTED,
+                  event.type == BonsoirBroadcastEventType.broadcastStarted,
               "has type == BROADCAST_STARTED"),
           predicate<BonsoirBroadcastEvent>(
               (event) =>
-                  event.type == BonsoirBroadcastEventType.BROADCAST_STOPPED,
+                  event.type == BonsoirBroadcastEventType.broadcastStopped,
               "has type == BROADCAST_STOPPED"),
           emitsDone
         ]),
@@ -67,23 +69,22 @@ void main() {
       const svcName = "Test service for numeration";
       const svcType = "_bonsoire2e._tcp";
       const svcPort = 3000;
-      var bcast = api.createBroadcast(
+      var bcast = api.createBroadcastAction(
           BonsoirService(name: svcName, type: svcType, port: svcPort),
           printLogs: true);
-      var discover = api.createDiscovery(svcType, printLogs: true);
+      var discover = api.createDiscoveryAction(svcType, printLogs: true);
       await Future.wait([bcast.ready, discover.ready]);
       bool resolvedAtLeastOnce = false;
       bool lostAtLeastOnce = false;
       bool foundAtLeastOnce = false;
       final sub = discover.eventStream!.listen((event) {
-        if (event.type == BonsoirDiscoveryEventType.DISCOVERY_SERVICE_FOUND) {
+        if (event.type == BonsoirDiscoveryEventType.discoveryServiceFound) {
           foundAtLeastOnce = true;
         }
-        if (event.type ==
-            BonsoirDiscoveryEventType.DISCOVERY_SERVICE_RESOLVED) {
+        if (event.type == BonsoirDiscoveryEventType.discoveryServiceResolved) {
           resolvedAtLeastOnce = true;
         }
-        if (event.type == BonsoirDiscoveryEventType.DISCOVERY_SERVICE_LOST) {
+        if (event.type == BonsoirDiscoveryEventType.discoveryServiceLost) {
           lostAtLeastOnce = true;
         }
       });

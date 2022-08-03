@@ -24,7 +24,7 @@ extension LinuxAvahi on BonsoirService {
 
 extension BonsoirStaticClasses on BonsoirBroadcastEvent {
   static BonsoirBroadcastEvent get unknownEvent =>
-      BonsoirBroadcastEvent(type: BonsoirBroadcastEventType.UNKNOWN);
+      BonsoirBroadcastEvent(type: BonsoirBroadcastEventType.unknown);
 }
 
 extension ItemNewPrintHelpers on AvahiServiceBrowserItemNew {
