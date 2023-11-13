@@ -28,7 +28,7 @@ ResolvedBonsoirService bonsoirServiceFromFoundService(
   return ResolvedBonsoirService(
       name: resolvedService.serviceName,
       type: resolvedService.type,
-      ip: resolvedService.address,
+      host: resolvedService.address,
       port: resolvedService.port,
       attributes: Map.fromEntries(resolvedService.txt
           .map((e) => MapEntry(e.split("=").first, e.split("=").last))));
