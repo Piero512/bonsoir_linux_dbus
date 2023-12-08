@@ -83,10 +83,8 @@ class AvahiBonsoirBroadcast extends AvahiBonsoirEvents<BonsoirBroadcastEvent> {
         domain: '',
         host: '',
         port: svc.port,
-        txt: service.attributes != null
-            ? AvahiBonsoirEvents.convertAttributesToTxtRecord(
-                service.attributes!)
-            : []);
+        txt: AvahiBonsoirEvents.convertAttributesToTxtRecord(
+            service.attributes));
   }
 
   @override
@@ -100,7 +98,6 @@ class AvahiBonsoirBroadcast extends AvahiBonsoirEvents<BonsoirBroadcastEvent> {
     super.stop();
   }
 
-  @override
   Map<String, dynamic> toJson() {
     return {'id': _entryGroup.path.toString(), 'printLogs': printLogs};
   }

@@ -28,7 +28,7 @@ ResolvedBonsoirService bonsoirServiceFromFoundService(
   return ResolvedBonsoirService(
       name: resolvedService.serviceName,
       type: resolvedService.type,
-      ip: resolvedService.address,
+      host: resolvedService.address,
       port: resolvedService.port,
       attributes: Map.fromEntries(resolvedService.txt
           .map((e) => MapEntry(e.split("=").first, e.split("=").last))));
@@ -183,7 +183,6 @@ class LegacyClient extends AvahiBonsoirDiscovery {
         busClient, 'org.freedesktop.Avahi', DBusObjectPath(browserPath));
   }
 
-  @override
   Map<String, dynamic> toJson() {
     return {
       'id': _browser.path.toString(),
@@ -248,7 +247,6 @@ class V2Client extends AvahiBonsoirDiscovery {
     await _browser.callStart();
   }
 
-  @override
   Map<String, dynamic> toJson() {
     return {
       'id': _browser.path.toString(),
